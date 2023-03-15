@@ -13,36 +13,36 @@ import (
 type TaskStateEnum int64
 
 const (
-	TaskStateEnum_Submitted TaskStateEnum = 0
-	TaskStateEnum_Completed TaskStateEnum = 1
-	TaskStateEnum_Abandoned TaskStateEnum = 2
-	TaskStateEnum_Unknown   TaskStateEnum = 255
+	TaskStateEnum_Unknown   TaskStateEnum = 0
+	TaskStateEnum_Submitted TaskStateEnum = 1
+	TaskStateEnum_Completed TaskStateEnum = 2
+	TaskStateEnum_Abandoned TaskStateEnum = 3
 )
 
 func (p TaskStateEnum) String() string {
 	switch p {
+	case TaskStateEnum_Unknown:
+		return "Unknown"
 	case TaskStateEnum_Submitted:
 		return "Submitted"
 	case TaskStateEnum_Completed:
 		return "Completed"
 	case TaskStateEnum_Abandoned:
 		return "Abandoned"
-	case TaskStateEnum_Unknown:
-		return "Unknown"
 	}
 	return "<UNSET>"
 }
 
 func TaskStateEnumFromString(s string) (TaskStateEnum, error) {
 	switch s {
+	case "Unknown":
+		return TaskStateEnum_Unknown, nil
 	case "Submitted":
 		return TaskStateEnum_Submitted, nil
 	case "Completed":
 		return TaskStateEnum_Completed, nil
 	case "Abandoned":
 		return TaskStateEnum_Abandoned, nil
-	case "Unknown":
-		return TaskStateEnum_Unknown, nil
 	}
 	return TaskStateEnum(0), fmt.Errorf("not a valid TaskStateEnum string")
 }

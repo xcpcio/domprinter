@@ -6,10 +6,11 @@ struct BaseResp {
 }
 
 enum TaskStateEnum {
-    Submitted = 0,
-    Completed = 1,
-    Abandoned = 2,
-    Unknown = 255,
+    Unknown = 0,
+
+    Submitted = 1,
+    Completed = 2,
+    Abandoned = 3,
 }
 
 struct PrintTaskBody {
