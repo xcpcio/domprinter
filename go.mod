@@ -2,7 +2,10 @@ module github.com/Dup4/domprinter
 
 go 1.18
 
-require github.com/cloudwego/hertz v0.6.0
+require (
+	github.com/apache/thrift v0.0.0-00010101000000-000000000000
+	github.com/cloudwego/hertz v0.6.0
+)
 
 require (
 	github.com/andeya/ameda v1.5.3 // indirect
