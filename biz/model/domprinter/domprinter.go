@@ -48,6 +48,19 @@ func TaskStateEnumFromString(s string) (TaskStateEnum, error) {
 }
 
 func TaskStateEnumPtr(v TaskStateEnum) *TaskStateEnum { return &v }
+
+func (p TaskStateEnum) MarshalText() ([]byte, error) {
+	return []byte(p.String()), nil
+}
+
+func (p *TaskStateEnum) UnmarshalText(text []byte) error {
+	q, err := TaskStateEnumFromString(string(text))
+	if err != nil {
+		return err
+	}
+	*p = q
+	return nil
+}
 func (p *TaskStateEnum) Scan(value interface{}) (err error) {
 	var result sql.NullInt64
 	err = result.Scan(value)

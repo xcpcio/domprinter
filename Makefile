@@ -1,5 +1,5 @@
 idl_gen:
-	hz update --idl ./idl/*.thrift
+	hz update --idl ./idl/*.thrift --json_enumstr
 
 build:
 	bash ./build.sh
