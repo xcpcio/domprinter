@@ -1,7 +1,13 @@
 namespace go domprinter
 
+enum StatusCodeEnum {
+    Success = 0,
+    ParamInvalid = 1,
+    DBErr = 2,
+}
+
 struct BaseResp {
-    1: i32 StatusCode,
+    1: StatusCodeEnum StatusCode,
     2: string StatusMessage,
 }
 

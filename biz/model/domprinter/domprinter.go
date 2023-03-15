@@ -10,6 +10,66 @@ import (
 	"github.com/apache/thrift/lib/go/thrift"
 )
 
+type StatusCodeEnum int64
+
+const (
+	StatusCodeEnum_Success      StatusCodeEnum = 0
+	StatusCodeEnum_ParamInvalid StatusCodeEnum = 1
+	StatusCodeEnum_DBErr        StatusCodeEnum = 2
+)
+
+func (p StatusCodeEnum) String() string {
+	switch p {
+	case StatusCodeEnum_Success:
+		return "Success"
+	case StatusCodeEnum_ParamInvalid:
+		return "ParamInvalid"
+	case StatusCodeEnum_DBErr:
+		return "DBErr"
+	}
+	return "<UNSET>"
+}
+
+func StatusCodeEnumFromString(s string) (StatusCodeEnum, error) {
+	switch s {
+	case "Success":
+		return StatusCodeEnum_Success, nil
+	case "ParamInvalid":
+		return StatusCodeEnum_ParamInvalid, nil
+	case "DBErr":
+		return StatusCodeEnum_DBErr, nil
+	}
+	return StatusCodeEnum(0), fmt.Errorf("not a valid StatusCodeEnum string")
+}
+
+func StatusCodeEnumPtr(v StatusCodeEnum) *StatusCodeEnum { return &v }
+
+func (p StatusCodeEnum) MarshalText() ([]byte, error) {
+	return []byte(p.String()), nil
+}
+
+func (p *StatusCodeEnum) UnmarshalText(text []byte) error {
+	q, err := StatusCodeEnumFromString(string(text))
+	if err != nil {
+		return err
+	}
+	*p = q
+	return nil
+}
+func (p *StatusCodeEnum) Scan(value interface{}) (err error) {
+	var result sql.NullInt64
+	err = result.Scan(value)
+	*p = StatusCodeEnum(result.Int64)
+	return
+}
+
+func (p *StatusCodeEnum) Value() (driver.Value, error) {
+	if p == nil {
+		return nil, nil
+	}
+	return int64(*p), nil
+}
+
 type TaskStateEnum int64
 
 const (
@@ -76,15 +136,15 @@ func (p *TaskStateEnum) Value() (driver.Value, error) {
 }
 
 type BaseResp struct {
-	StatusCode    int32  `thrift:"StatusCode,1" form:"StatusCode" json:"StatusCode" query:"StatusCode"`
-	StatusMessage string `thrift:"StatusMessage,2" form:"StatusMessage" json:"StatusMessage" query:"StatusMessage"`
+	StatusCode    StatusCodeEnum `thrift:"StatusCode,1" form:"StatusCode" json:"StatusCode" query:"StatusCode"`
+	StatusMessage string         `thrift:"StatusMessage,2" form:"StatusMessage" json:"StatusMessage" query:"StatusMessage"`
 }
 
 func NewBaseResp() *BaseResp {
 	return &BaseResp{}
 }
 
-func (p *BaseResp) GetStatusCode() (v int32) {
+func (p *BaseResp) GetStatusCode() (v StatusCodeEnum) {
 	return p.StatusCode
 }
 
@@ -170,7 +230,7 @@ func (p *BaseResp) ReadField1(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadI32(); err != nil {
 		return err
 	} else {
-		p.StatusCode = v
+		p.StatusCode = StatusCodeEnum(v)
 	}
 	return nil
 }
@@ -221,7 +281,7 @@ func (p *BaseResp) writeField1(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("StatusCode", thrift.I32, 1); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI32(p.StatusCode); err != nil {
+	if err := oprot.WriteI32(int32(p.StatusCode)); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
