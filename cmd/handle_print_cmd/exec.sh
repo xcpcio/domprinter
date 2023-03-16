@@ -3,7 +3,7 @@
 CUR_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 
 FILE="${1}"
-ORIGINAL="${2}"
+ORIGINAL_FILE="${2}"
 LANGUAGE="${3}"
 USER_NAME="${4}"
 TEAM_NAME="${5}"
@@ -33,9 +33,9 @@ p["TeamName"] = "${TEAM_NAME}"
 p["TeamID"] = "${TEAM_ID}"
 p["LOCATION"] = "${LOCATION}"
 p["Language"] = "${LANGUAGE}"
-p["FileName"] = "${ORIGINAL}"
+p["FileName"] = "${ORIGINAL_FILE}"
 p["SourceCode"] = '''
-//    FILE_NAME=${FILE_NAME}
+//    FILE_NAME=${ORIGINAL_FILE}
 //    LANGUAGE=${LANGUAGE}
 //    TEAM_NAME=${TEAM_NAME}
 //    LOCATION=${LOCATION}
@@ -54,10 +54,10 @@ res = json.loads(response.read().decode('utf-8'))
 
 def main():
     if code == 200:
-        print("{}. [TEAM_NAME={}] [LOCATION={}] [FILE={}] [LANGUAGE={}]".format(res["BaseResp"]["RespMessage"], "${TEAM_NAME}", "${LOCATION}", "${ORIGINAL}", "${LANGUAGE}"))
+        print("{}. [TEAM_NAME={}] [LOCATION={}] [FILE={}] [LANGUAGE={}]".format(res["BaseResp"]["RespMessage"], "${TEAM_NAME}", "${LOCATION}", "${ORIGINAL_FILE}", "${LANGUAGE}"))
         return
     else:
-        print("Submit PrintTask Failed. [CODE={}]".format(code))
+        print("Submit PrintTask Failed. Please try again or contact the administrator. [CODE={}]".format(code))
 
     print(res)
 
@@ -66,7 +66,7 @@ EOF
 )
 
 echo "${RES_MESSAGE}"
-echo "[FILE=${FILE}] [ORIGINAL=${ORIGINAL}] [LANGUAGE=${LANGUAGE}] [USER_NAME=${USER_NAME}] [TEAM_NAME=${TEAM_NAME}] [TEAM_ID=${TEAM_ID}] [LOCATION=${LOCATION}] [RES=${RES_MESSAGE}]" >>"${CUR_DIR}/handle_print_cmd.log"
+echo "[FILE=${FILE}] [ORIGINAL_FILE=${ORIGINAL_FILE}] [LANGUAGE=${LANGUAGE}] [USER_NAME=${USER_NAME}] [TEAM_NAME=${TEAM_NAME}] [TEAM_ID=${TEAM_ID}] [LOCATION=${LOCATION}] [RES=${RES_MESSAGE}]" >>"${CUR_DIR}/handle_print_cmd.log"
 
 # test command
 # ./cmd/handle_print_cmd/exec.sh /tmp/abcdefg a.cpp cpp Dup4 Dup4 Dup4 test
