@@ -36,3 +36,5 @@ _testmain.go
 dumped_hertz_remote_config.json
 
 env.sh
+
+cmd/handle_print_cmd/handle_print_cmd.log

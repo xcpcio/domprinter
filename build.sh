@@ -9,9 +9,11 @@ if [[ -d "${OUTPUT_DIR}" ]]; then
     rm -rf "${OUTPUT_DIR}"
 fi
 
-mkdir -p "${OUTPUT_DIR}/bin"
+mkdir -p "${OUTPUT_DIR}/"{bin,handle_print_cmd}
 
 cp "${CUR_DIR}/script"/* "${OUTPUT_DIR}"/ 2>/dev/null
 chmod +x "${OUTPUT_DIR}/bootstrap.sh"
 
 go build -o "${OUTPUT_DIR}/bin/${BINARY_NAME}"
+
+cp -a "${CUR_DIR}/cmd/handle_print_cmd/exec.sh" "${OUTPUT_DIR}"/handle_print_cmd/exec.sh
