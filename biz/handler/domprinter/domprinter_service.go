@@ -14,19 +14,69 @@ import (
 	"github.com/Dup4/domprinter/biz/model/query"
 )
 
+const iSO8601TimeFormat = "2006-01-02T15:04:05.999-07:00"
+
 // FetchPrintTask .
 // @router /print-task [GET]
 func FetchPrintTask(ctx context.Context, c *app.RequestContext) {
 	var err error
 	var req domprinter.FetchPrintTaskReq
+
+	resp := domprinter.NewFetchPrintTaskResp()
+	resp.BaseResp = domprinter.NewBaseResp()
+	bResp := resp.BaseResp
+
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		bResp.RespCode = domprinter.RespCodeEnum_ParamInvalid
+		bResp.RespMessage = err.Error()
+		c.JSON(consts.StatusBadRequest, resp)
 		return
 	}
 
-	resp := new(domprinter.FetchPrintTaskResp)
+	limit := 16
+	if req.IsSetLimitTaskNum() {
+		limit = int(*req.LimitTaskNum)
+	}
 
+	p := query.PrintTask
+	b := p.
+		WithContext(ctx).
+		Where(p.State.Eq(req.TaskState.String())).
+		Order(p.ID).
+		Limit(limit)
+
+	if req.IsSetOffsetTaskID() {
+		b = b.Offset(int(*req.OffsetTaskID))
+	}
+
+	tasks, err := b.Find()
+	if err != nil {
+		bResp.RespCode = domprinter.RespCodeEnum_DBErr
+		bResp.RespMessage = err.Error()
+		c.JSON(consts.StatusBadRequest, resp)
+	}
+
+	resp.PrintTaskList = make([]*domprinter.PrintTaskDTO, 0, len(tasks))
+	for _, task := range tasks {
+		state, _ := domprinter.TaskStateEnumFromString(task.State)
+
+		resp.PrintTaskList = append(resp.PrintTaskList, &domprinter.PrintTaskDTO{
+			SubmitTime:  task.SubmitTime.Format(iSO8601TimeFormat),
+			UserName:    task.UserName,
+			TeamName:    task.TeamName,
+			TeamID:      task.TeamID,
+			Location:    task.Location,
+			Language:    task.Language,
+			FileName:    task.FileName,
+			SourceCode:  string(task.SourceCode),
+			PrintTaskID: task.ID,
+			TaskState:   state,
+		})
+	}
+
+	bResp.RespCode = domprinter.RespCodeEnum_Success
+	bResp.RespMessage = "Fetch PrintTask Successfully"
 	c.JSON(consts.StatusOK, resp)
 }
 
@@ -50,7 +100,7 @@ func SubmitPrintTask(ctx context.Context, c *app.RequestContext) {
 
 	p := req.PrintTask
 
-	submitTime, err := time.Parse("2006-01-02T15:04:05.999-07:00", p.SubmitTime)
+	submitTime, err := time.Parse(iSO8601TimeFormat, p.SubmitTime)
 	if err != nil {
 		bResp.RespCode = domprinter.RespCodeEnum_ParamInvalid
 		bResp.RespMessage = err.Error()
