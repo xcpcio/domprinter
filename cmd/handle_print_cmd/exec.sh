@@ -34,7 +34,16 @@ p["TeamID"] = "${TEAM_ID}"
 p["LOCATION"] = "${LOCATION}"
 p["Language"] = "${LANGUAGE}"
 p["FileName"] = "${ORIGINAL}"
-p["SourceCode"] = "${SOURCE_CODE}"
+p["SourceCode"] = '''
+/*
+    FILE_NAME=${FILE_NAME}
+    LANGUAGE=${LANGUAGE}
+    TEAM_NAME=${TEAM_NAME}
+    LOCATION=${LOCATION}
+*/
+
+${SOURCE_CODE}
+'''
 
 url = "http://${DOMPRINTER_HOSTNAME:-127.0.0.1}:${DOMPRINTER_PORT:-8888}/print-task"
 payload = json.dumps(body)
