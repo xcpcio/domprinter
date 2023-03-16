@@ -54,7 +54,7 @@ res = json.loads(response.read().decode('utf-8'))
 
 def main():
     if code == 200:
-        print("{}. [TEAM_NAME={}] [LOCATION={}] [FILE={}] [LANGUAGE={}]".format(res["BaseResp"]["RespMessage"], "${TEAM_NAME}", "${LOCATION}", "${ORIGINAL_FILE}", "${LANGUAGE}"))
+        print("{}. [FILE_NAME={}] [LANGUAGE={}] [TEAM_NAME={}] [LOCATION={}]".format(res["BaseResp"]["RespMessage"], "${ORIGINAL_FILE}", "${LANGUAGE}", "${TEAM_NAME}", "${LOCATION}"))
         return
     else:
         print("Submit PrintTask Failed. Please try again or contact the administrator. [CODE={}]".format(code))
