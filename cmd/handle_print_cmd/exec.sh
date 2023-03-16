@@ -21,7 +21,7 @@ fi
 RES_MESSAGE=$(
     python3 <<EOF
 import json
-import requests
+import urllib.request
 
 body = {}
 body["PrintTask"] = {}
@@ -49,10 +49,10 @@ url = "http://${DOMPRINTER_HOSTNAME:-127.0.0.1}:${DOMPRINTER_PORT:-8888}/print-t
 payload = json.dumps(body)
 headers = {'Content-Type': 'application/json'}
 
-response = requests.post(url, data=payload, headers=headers)
-
-code = response.status_code
-res = json.loads(response.content)
+req = urllib.request.Request(url, data=json.dumps(body).encode('utf-8'), headers=headers)
+response = urllib.request.urlopen(req)
+code = response.status
+res = json.loads(response.read().decode('utf-8'))
 
 def main():
     if code == 200:
