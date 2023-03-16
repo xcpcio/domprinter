@@ -4,9 +4,13 @@ package main
 
 import (
 	"github.com/cloudwego/hertz/pkg/app/server"
+
+	"github.com/Dup4/domprinter/biz/dal"
 )
 
 func main() {
+	dal.Init()
+
 	h := server.Default()
 
 	register(h)

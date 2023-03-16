@@ -5,7 +5,7 @@ import (
 	"github.com/Dup4/domprinter/biz/model/query"
 )
 
-func init() {
+func Init() {
 	mysql.Init()
 	query.SetDefault(mysql.DB)
 }

@@ -327,14 +327,15 @@ type PrintTaskDTO struct {
 	Language    string        `thrift:"Language,6" form:"Language" json:"Language" query:"Language"`
 	FileName    string        `thrift:"FileName,7" form:"FileName" json:"FileName" query:"FileName"`
 	SourceCode  string        `thrift:"SourceCode,8" form:"SourceCode" json:"SourceCode" query:"SourceCode"`
-	PrintTaskID *int64        `thrift:"PrintTaskID,9,optional" form:"PrintTaskID" json:"PrintTaskID,omitempty" query:"PrintTaskID"`
-	TaskState   TaskStateEnum `thrift:"TaskState,10,required" form:"TaskState,required" json:"TaskState,required" query:"TaskState,required"`
+	PrintTaskID int64         `thrift:"PrintTaskID,9" form:"PrintTaskID" json:"PrintTaskID" query:"PrintTaskID"`
+	TaskState   TaskStateEnum `thrift:"TaskState,10" form:"TaskState" json:"TaskState" query:"TaskState"`
 }
 
 func NewPrintTaskDTO() *PrintTaskDTO {
 	return &PrintTaskDTO{
 
-		TaskState: TaskStateEnum_Unknown,
+		PrintTaskID: 0,
+		TaskState:   TaskStateEnum_Unknown,
 	}
 }
 
@@ -370,13 +371,8 @@ func (p *PrintTaskDTO) GetSourceCode() (v string) {
 	return p.SourceCode
 }
 
-var PrintTaskDTO_PrintTaskID_DEFAULT int64
-
 func (p *PrintTaskDTO) GetPrintTaskID() (v int64) {
-	if !p.IsSetPrintTaskID() {
-		return PrintTaskDTO_PrintTaskID_DEFAULT
-	}
-	return *p.PrintTaskID
+	return p.PrintTaskID
 }
 
 func (p *PrintTaskDTO) GetTaskState() (v TaskStateEnum) {
@@ -396,15 +392,10 @@ var fieldIDToName_PrintTaskDTO = map[int16]string{
 	10: "TaskState",
 }
 
-func (p *PrintTaskDTO) IsSetPrintTaskID() bool {
-	return p.PrintTaskID != nil
-}
-
 func (p *PrintTaskDTO) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
 	var fieldId int16
-	var issetTaskState bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -515,7 +506,6 @@ func (p *PrintTaskDTO) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField10(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetTaskState = true
 			} else {
 				if err = iprot.Skip(fieldTypeId); err != nil {
 					goto SkipFieldError
@@ -535,10 +525,6 @@ func (p *PrintTaskDTO) Read(iprot thrift.TProtocol) (err error) {
 		goto ReadStructEndError
 	}
 
-	if !issetTaskState {
-		fieldId = 10
-		goto RequiredFieldNotSetError
-	}
 	return nil
 ReadStructBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
@@ -553,8 +539,6 @@ ReadFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
-RequiredFieldNotSetError:
-	return thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_PrintTaskDTO[fieldId]))
 }
 
 func (p *PrintTaskDTO) ReadField1(iprot thrift.TProtocol) error {
@@ -633,7 +617,7 @@ func (p *PrintTaskDTO) ReadField9(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
 	} else {
-		p.PrintTaskID = &v
+		p.PrintTaskID = v
 	}
 	return nil
 }
@@ -849,16 +833,14 @@ WriteFieldEndError:
 }
 
 func (p *PrintTaskDTO) writeField9(oprot thrift.TProtocol) (err error) {
-	if p.IsSetPrintTaskID() {
-		if err = oprot.WriteFieldBegin("PrintTaskID", thrift.I64, 9); err != nil {
-			goto WriteFieldBeginError
-		}
-		if err := oprot.WriteI64(*p.PrintTaskID); err != nil {
-			return err
-		}
-		if err = oprot.WriteFieldEnd(); err != nil {
-			goto WriteFieldEndError
-		}
+	if err = oprot.WriteFieldBegin("PrintTaskID", thrift.I64, 9); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.PrintTaskID); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
 	}
 	return nil
 WriteFieldBeginError:

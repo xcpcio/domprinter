@@ -1,0 +1,11 @@
+info:
+  contact: {}
+paths:
+  /print-task:
+    get:
+      responses: {}
+    patch:
+      responses: {}
+    post:
+      responses: {}
+swagger: "2.0"

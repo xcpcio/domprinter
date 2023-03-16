@@ -4,6 +4,9 @@ idl_gen:
 gorm_gen:
 	go run ./cmd/gorm_gen/generate.go
 
+swagger_gen:
+	swag init
+
 build:
 	bash ./build.sh
 

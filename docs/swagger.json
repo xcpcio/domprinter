@@ -1,0 +1,19 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/print-task": {
+            "get": {
+                "responses": {}
+            },
+            "post": {
+                "responses": {}
+            },
+            "patch": {
+                "responses": {}
+            }
+        }
+    }
+}

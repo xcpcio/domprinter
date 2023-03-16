@@ -4,10 +4,14 @@ package domprinter
 
 import (
 	"context"
+	"time"
 
 	domprinter "github.com/Dup4/domprinter/biz/model/domprinter"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
+
+	"github.com/Dup4/domprinter/biz/model/orm_gen"
+	"github.com/Dup4/domprinter/biz/model/query"
 )
 
 // FetchPrintTask .
@@ -31,14 +35,52 @@ func FetchPrintTask(ctx context.Context, c *app.RequestContext) {
 func SubmitPrintTask(ctx context.Context, c *app.RequestContext) {
 	var err error
 	var req domprinter.SubmitPrintTaskReq
+
+	resp := domprinter.NewSubmitPrintTaskResp()
+	resp.BaseResp = domprinter.NewBaseResp()
+	bResp := resp.BaseResp
+
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		bResp.RespCode = domprinter.RespCodeEnum_ParamInvalid
+		bResp.RespMessage = err.Error()
+		c.JSON(consts.StatusBadRequest, resp)
 		return
 	}
 
-	resp := new(domprinter.SubmitPrintTaskResp)
+	p := req.PrintTask
 
+	submitTime, err := time.Parse("2006-01-02T15:04:05.999-07:00", p.SubmitTime)
+	if err != nil {
+		bResp.RespCode = domprinter.RespCodeEnum_ParamInvalid
+		bResp.RespMessage = err.Error()
+		c.JSON(consts.StatusBadRequest, resp)
+		return
+	}
+
+	printTaskDAO := orm_gen.PrintTask{
+		State:      domprinter.TaskStateEnum_Submitted.String(),
+		UserName:   p.UserName,
+		TeamName:   p.TeamName,
+		TeamID:     p.TeamID,
+		Location:   p.Location,
+		Language:   p.Language,
+		FileName:   p.FileName,
+		SourceCode: []byte(p.SourceCode),
+		SubmitTime: submitTime,
+	}
+
+	err = query.PrintTask.WithContext(ctx).Create(&printTaskDAO)
+	if err != nil {
+		bResp.RespCode = domprinter.RespCodeEnum_DBErr
+		bResp.RespMessage = err.Error()
+		c.JSON(consts.StatusInternalServerError, resp)
+		return
+	}
+
+	resp.PrintTaskID = printTaskDAO.ID
+	bResp.RespCode = domprinter.RespCodeEnum_Success
+	bResp.RespMessage = "Submit PrintTask Successfully"
 	c.JSON(consts.StatusOK, resp)
 }
 

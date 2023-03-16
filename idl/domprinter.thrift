@@ -29,8 +29,8 @@ struct PrintTaskDTO {
     7: string FileName,
     8: string SourceCode,
 
-    9: optional i64 PrintTaskID,
-    10: required TaskStateEnum TaskState = TaskStateEnum.Unknown,
+    9: i64 PrintTaskID = 0,
+    10: TaskStateEnum TaskState = TaskStateEnum.Unknown,
 }
 
 struct FetchPrintTaskReq {
