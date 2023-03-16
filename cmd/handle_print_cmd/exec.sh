@@ -35,12 +35,10 @@ p["LOCATION"] = "${LOCATION}"
 p["Language"] = "${LANGUAGE}"
 p["FileName"] = "${ORIGINAL}"
 p["SourceCode"] = '''
-/*
-    FILE_NAME=${FILE_NAME}
-    LANGUAGE=${LANGUAGE}
-    TEAM_NAME=${TEAM_NAME}
-    LOCATION=${LOCATION}
-*/
+//    FILE_NAME=${FILE_NAME}
+//    LANGUAGE=${LANGUAGE}
+//    TEAM_NAME=${TEAM_NAME}
+//    LOCATION=${LOCATION}
 
 ${SOURCE_CODE}
 '''
