@@ -135,6 +135,151 @@ func (p *TaskStateEnum) Value() (driver.Value, error) {
 	return int64(*p), nil
 }
 
+type BaseReq struct {
+	AuthToken string `thrift:"AuthToken,1,required" header:"X-DOM-TOKEN,required" json:"AuthToken,required"`
+}
+
+func NewBaseReq() *BaseReq {
+	return &BaseReq{}
+}
+
+func (p *BaseReq) GetAuthToken() (v string) {
+	return p.AuthToken
+}
+
+var fieldIDToName_BaseReq = map[int16]string{
+	1: "AuthToken",
+}
+
+func (p *BaseReq) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+	var issetAuthToken bool = false
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetAuthToken = true
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	if !issetAuthToken {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_BaseReq[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_BaseReq[fieldId]))
+}
+
+func (p *BaseReq) ReadField1(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.AuthToken = v
+	}
+	return nil
+}
+
+func (p *BaseReq) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("BaseReq"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *BaseReq) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("AuthToken", thrift.STRING, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.AuthToken); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *BaseReq) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("BaseReq(%+v)", *p)
+}
+
 type BaseResp struct {
 	RespCode    RespCodeEnum `thrift:"RespCode,1" form:"RespCode" json:"RespCode" query:"RespCode"`
 	RespMessage string       `thrift:"RespMessage,2" form:"RespMessage" json:"RespMessage" query:"RespMessage"`
@@ -877,6 +1022,7 @@ type FetchPrintTaskReq struct {
 	TaskState    TaskStateEnum `thrift:"TaskState,1" form:"TaskState" json:"TaskState" query:"TaskState"`
 	OffsetTaskID *int64        `thrift:"OffsetTaskID,2,optional" form:"OffsetTaskID" json:"OffsetTaskID,omitempty" query:"OffsetTaskID"`
 	LimitTaskNum *int64        `thrift:"LimitTaskNum,3,optional" form:"LimitTaskNum" json:"LimitTaskNum,omitempty" query:"LimitTaskNum"`
+	BaseReq      *BaseReq      `thrift:"BaseReq,255" form:"BaseReq" json:"BaseReq" query:"BaseReq"`
 }
 
 func NewFetchPrintTaskReq() *FetchPrintTaskReq {
@@ -905,10 +1051,20 @@ func (p *FetchPrintTaskReq) GetLimitTaskNum() (v int64) {
 	return *p.LimitTaskNum
 }
 
+var FetchPrintTaskReq_BaseReq_DEFAULT *BaseReq
+
+func (p *FetchPrintTaskReq) GetBaseReq() (v *BaseReq) {
+	if !p.IsSetBaseReq() {
+		return FetchPrintTaskReq_BaseReq_DEFAULT
+	}
+	return p.BaseReq
+}
+
 var fieldIDToName_FetchPrintTaskReq = map[int16]string{
-	1: "TaskState",
-	2: "OffsetTaskID",
-	3: "LimitTaskNum",
+	1:   "TaskState",
+	2:   "OffsetTaskID",
+	3:   "LimitTaskNum",
+	255: "BaseReq",
 }
 
 func (p *FetchPrintTaskReq) IsSetOffsetTaskID() bool {
@@ -917,6 +1073,10 @@ func (p *FetchPrintTaskReq) IsSetOffsetTaskID() bool {
 
 func (p *FetchPrintTaskReq) IsSetLimitTaskNum() bool {
 	return p.LimitTaskNum != nil
+}
+
+func (p *FetchPrintTaskReq) IsSetBaseReq() bool {
+	return p.BaseReq != nil
 }
 
 func (p *FetchPrintTaskReq) Read(iprot thrift.TProtocol) (err error) {
@@ -961,6 +1121,16 @@ func (p *FetchPrintTaskReq) Read(iprot thrift.TProtocol) (err error) {
 		case 3:
 			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField3(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 255:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField255(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -1025,6 +1195,14 @@ func (p *FetchPrintTaskReq) ReadField3(iprot thrift.TProtocol) error {
 	return nil
 }
 
+func (p *FetchPrintTaskReq) ReadField255(iprot thrift.TProtocol) error {
+	p.BaseReq = NewBaseReq()
+	if err := p.BaseReq.Read(iprot); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (p *FetchPrintTaskReq) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
 	if err = oprot.WriteStructBegin("FetchPrintTaskReq"); err != nil {
@@ -1041,6 +1219,10 @@ func (p *FetchPrintTaskReq) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField3(oprot); err != nil {
 			fieldId = 3
+			goto WriteFieldError
+		}
+		if err = p.writeField255(oprot); err != nil {
+			fieldId = 255
 			goto WriteFieldError
 		}
 
@@ -1117,6 +1299,23 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
 }
 
+func (p *FetchPrintTaskReq) writeField255(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("BaseReq", thrift.STRUCT, 255); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := p.BaseReq.Write(oprot); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 255 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 255 end error: ", p), err)
+}
+
 func (p *FetchPrintTaskReq) String() string {
 	if p == nil {
 		return "<nil>"
@@ -1126,7 +1325,7 @@ func (p *FetchPrintTaskReq) String() string {
 
 type FetchPrintTaskResp struct {
 	PrintTaskList []*PrintTaskDTO `thrift:"PrintTaskList,1" form:"PrintTaskList" json:"PrintTaskList" query:"PrintTaskList"`
-	BaseResp      *BaseResp       `thrift:"BaseResp,2" form:"BaseResp" json:"BaseResp" query:"BaseResp"`
+	BaseResp      *BaseResp       `thrift:"BaseResp,255" form:"BaseResp" json:"BaseResp" query:"BaseResp"`
 }
 
 func NewFetchPrintTaskResp() *FetchPrintTaskResp {
@@ -1147,8 +1346,8 @@ func (p *FetchPrintTaskResp) GetBaseResp() (v *BaseResp) {
 }
 
 var fieldIDToName_FetchPrintTaskResp = map[int16]string{
-	1: "PrintTaskList",
-	2: "BaseResp",
+	1:   "PrintTaskList",
+	255: "BaseResp",
 }
 
 func (p *FetchPrintTaskResp) IsSetBaseResp() bool {
@@ -1184,9 +1383,9 @@ func (p *FetchPrintTaskResp) Read(iprot thrift.TProtocol) (err error) {
 					goto SkipFieldError
 				}
 			}
-		case 2:
+		case 255:
 			if fieldTypeId == thrift.STRUCT {
-				if err = p.ReadField2(iprot); err != nil {
+				if err = p.ReadField255(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -1244,7 +1443,7 @@ func (p *FetchPrintTaskResp) ReadField1(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *FetchPrintTaskResp) ReadField2(iprot thrift.TProtocol) error {
+func (p *FetchPrintTaskResp) ReadField255(iprot thrift.TProtocol) error {
 	p.BaseResp = NewBaseResp()
 	if err := p.BaseResp.Read(iprot); err != nil {
 		return err
@@ -1262,8 +1461,8 @@ func (p *FetchPrintTaskResp) Write(oprot thrift.TProtocol) (err error) {
 			fieldId = 1
 			goto WriteFieldError
 		}
-		if err = p.writeField2(oprot); err != nil {
-			fieldId = 2
+		if err = p.writeField255(oprot); err != nil {
+			fieldId = 255
 			goto WriteFieldError
 		}
 
@@ -1310,8 +1509,8 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
 }
 
-func (p *FetchPrintTaskResp) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("BaseResp", thrift.STRUCT, 2); err != nil {
+func (p *FetchPrintTaskResp) writeField255(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("BaseResp", thrift.STRUCT, 255); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := p.BaseResp.Write(oprot); err != nil {
@@ -1322,9 +1521,9 @@ func (p *FetchPrintTaskResp) writeField2(oprot thrift.TProtocol) (err error) {
 	}
 	return nil
 WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 255 begin error: ", p), err)
 WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 255 end error: ", p), err)
 }
 
 func (p *FetchPrintTaskResp) String() string {
@@ -1336,6 +1535,7 @@ func (p *FetchPrintTaskResp) String() string {
 
 type SubmitPrintTaskReq struct {
 	PrintTask *PrintTaskDTO `thrift:"PrintTask,1" form:"PrintTask" json:"PrintTask" query:"PrintTask"`
+	BaseReq   *BaseReq      `thrift:"BaseReq,255" form:"BaseReq" json:"BaseReq" query:"BaseReq"`
 }
 
 func NewSubmitPrintTaskReq() *SubmitPrintTaskReq {
@@ -1351,12 +1551,26 @@ func (p *SubmitPrintTaskReq) GetPrintTask() (v *PrintTaskDTO) {
 	return p.PrintTask
 }
 
+var SubmitPrintTaskReq_BaseReq_DEFAULT *BaseReq
+
+func (p *SubmitPrintTaskReq) GetBaseReq() (v *BaseReq) {
+	if !p.IsSetBaseReq() {
+		return SubmitPrintTaskReq_BaseReq_DEFAULT
+	}
+	return p.BaseReq
+}
+
 var fieldIDToName_SubmitPrintTaskReq = map[int16]string{
-	1: "PrintTask",
+	1:   "PrintTask",
+	255: "BaseReq",
 }
 
 func (p *SubmitPrintTaskReq) IsSetPrintTask() bool {
 	return p.PrintTask != nil
+}
+
+func (p *SubmitPrintTaskReq) IsSetBaseReq() bool {
+	return p.BaseReq != nil
 }
 
 func (p *SubmitPrintTaskReq) Read(iprot thrift.TProtocol) (err error) {
@@ -1381,6 +1595,16 @@ func (p *SubmitPrintTaskReq) Read(iprot thrift.TProtocol) (err error) {
 		case 1:
 			if fieldTypeId == thrift.STRUCT {
 				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 255:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField255(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -1426,6 +1650,14 @@ func (p *SubmitPrintTaskReq) ReadField1(iprot thrift.TProtocol) error {
 	return nil
 }
 
+func (p *SubmitPrintTaskReq) ReadField255(iprot thrift.TProtocol) error {
+	p.BaseReq = NewBaseReq()
+	if err := p.BaseReq.Read(iprot); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (p *SubmitPrintTaskReq) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
 	if err = oprot.WriteStructBegin("SubmitPrintTaskReq"); err != nil {
@@ -1434,6 +1666,10 @@ func (p *SubmitPrintTaskReq) Write(oprot thrift.TProtocol) (err error) {
 	if p != nil {
 		if err = p.writeField1(oprot); err != nil {
 			fieldId = 1
+			goto WriteFieldError
+		}
+		if err = p.writeField255(oprot); err != nil {
+			fieldId = 255
 			goto WriteFieldError
 		}
 
@@ -1472,6 +1708,23 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
 }
 
+func (p *SubmitPrintTaskReq) writeField255(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("BaseReq", thrift.STRUCT, 255); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := p.BaseReq.Write(oprot); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 255 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 255 end error: ", p), err)
+}
+
 func (p *SubmitPrintTaskReq) String() string {
 	if p == nil {
 		return "<nil>"
@@ -1482,7 +1735,7 @@ func (p *SubmitPrintTaskReq) String() string {
 type SubmitPrintTaskResp struct {
 	PrintTaskID int64         `thrift:"PrintTaskID,1" form:"PrintTaskID" json:"PrintTaskID" query:"PrintTaskID"`
 	TaskState   TaskStateEnum `thrift:"TaskState,2" form:"TaskState" json:"TaskState" query:"TaskState"`
-	BaseResp    *BaseResp     `thrift:"BaseResp,3" form:"BaseResp" json:"BaseResp" query:"BaseResp"`
+	BaseResp    *BaseResp     `thrift:"BaseResp,255" form:"BaseResp" json:"BaseResp" query:"BaseResp"`
 }
 
 func NewSubmitPrintTaskResp() *SubmitPrintTaskResp {
@@ -1510,9 +1763,9 @@ func (p *SubmitPrintTaskResp) GetBaseResp() (v *BaseResp) {
 }
 
 var fieldIDToName_SubmitPrintTaskResp = map[int16]string{
-	1: "PrintTaskID",
-	2: "TaskState",
-	3: "BaseResp",
+	1:   "PrintTaskID",
+	2:   "TaskState",
+	255: "BaseResp",
 }
 
 func (p *SubmitPrintTaskResp) IsSetBaseResp() bool {
@@ -1558,9 +1811,9 @@ func (p *SubmitPrintTaskResp) Read(iprot thrift.TProtocol) (err error) {
 					goto SkipFieldError
 				}
 			}
-		case 3:
+		case 255:
 			if fieldTypeId == thrift.STRUCT {
-				if err = p.ReadField3(iprot); err != nil {
+				if err = p.ReadField255(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -1616,7 +1869,7 @@ func (p *SubmitPrintTaskResp) ReadField2(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *SubmitPrintTaskResp) ReadField3(iprot thrift.TProtocol) error {
+func (p *SubmitPrintTaskResp) ReadField255(iprot thrift.TProtocol) error {
 	p.BaseResp = NewBaseResp()
 	if err := p.BaseResp.Read(iprot); err != nil {
 		return err
@@ -1638,8 +1891,8 @@ func (p *SubmitPrintTaskResp) Write(oprot thrift.TProtocol) (err error) {
 			fieldId = 2
 			goto WriteFieldError
 		}
-		if err = p.writeField3(oprot); err != nil {
-			fieldId = 3
+		if err = p.writeField255(oprot); err != nil {
+			fieldId = 255
 			goto WriteFieldError
 		}
 
@@ -1695,8 +1948,8 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
 }
 
-func (p *SubmitPrintTaskResp) writeField3(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("BaseResp", thrift.STRUCT, 3); err != nil {
+func (p *SubmitPrintTaskResp) writeField255(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("BaseResp", thrift.STRUCT, 255); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := p.BaseResp.Write(oprot); err != nil {
@@ -1707,9 +1960,9 @@ func (p *SubmitPrintTaskResp) writeField3(oprot thrift.TProtocol) (err error) {
 	}
 	return nil
 WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 255 begin error: ", p), err)
 WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 255 end error: ", p), err)
 }
 
 func (p *SubmitPrintTaskResp) String() string {
@@ -1722,6 +1975,7 @@ func (p *SubmitPrintTaskResp) String() string {
 type UpdatePrintTaskReq struct {
 	PrintTaskIDList []int64       `thrift:"PrintTaskIDList,1" form:"PrintTaskIDList" json:"PrintTaskIDList" query:"PrintTaskIDList"`
 	TaskState       TaskStateEnum `thrift:"TaskState,2" form:"TaskState" json:"TaskState" query:"TaskState"`
+	BaseReq         *BaseReq      `thrift:"BaseReq,255" form:"BaseReq" json:"BaseReq" query:"BaseReq"`
 }
 
 func NewUpdatePrintTaskReq() *UpdatePrintTaskReq {
@@ -1736,9 +1990,23 @@ func (p *UpdatePrintTaskReq) GetTaskState() (v TaskStateEnum) {
 	return p.TaskState
 }
 
+var UpdatePrintTaskReq_BaseReq_DEFAULT *BaseReq
+
+func (p *UpdatePrintTaskReq) GetBaseReq() (v *BaseReq) {
+	if !p.IsSetBaseReq() {
+		return UpdatePrintTaskReq_BaseReq_DEFAULT
+	}
+	return p.BaseReq
+}
+
 var fieldIDToName_UpdatePrintTaskReq = map[int16]string{
-	1: "PrintTaskIDList",
-	2: "TaskState",
+	1:   "PrintTaskIDList",
+	2:   "TaskState",
+	255: "BaseReq",
+}
+
+func (p *UpdatePrintTaskReq) IsSetBaseReq() bool {
+	return p.BaseReq != nil
 }
 
 func (p *UpdatePrintTaskReq) Read(iprot thrift.TProtocol) (err error) {
@@ -1773,6 +2041,16 @@ func (p *UpdatePrintTaskReq) Read(iprot thrift.TProtocol) (err error) {
 		case 2:
 			if fieldTypeId == thrift.I32 {
 				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 255:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField255(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -1841,6 +2119,14 @@ func (p *UpdatePrintTaskReq) ReadField2(iprot thrift.TProtocol) error {
 	return nil
 }
 
+func (p *UpdatePrintTaskReq) ReadField255(iprot thrift.TProtocol) error {
+	p.BaseReq = NewBaseReq()
+	if err := p.BaseReq.Read(iprot); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (p *UpdatePrintTaskReq) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
 	if err = oprot.WriteStructBegin("UpdatePrintTaskReq"); err != nil {
@@ -1853,6 +2139,10 @@ func (p *UpdatePrintTaskReq) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField2(oprot); err != nil {
 			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField255(oprot); err != nil {
+			fieldId = 255
 			goto WriteFieldError
 		}
 
@@ -1916,6 +2206,23 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
 }
 
+func (p *UpdatePrintTaskReq) writeField255(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("BaseReq", thrift.STRUCT, 255); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := p.BaseReq.Write(oprot); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 255 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 255 end error: ", p), err)
+}
+
 func (p *UpdatePrintTaskReq) String() string {
 	if p == nil {
 		return "<nil>"
@@ -1924,7 +2231,7 @@ func (p *UpdatePrintTaskReq) String() string {
 }
 
 type UpdatePrintTaskResp struct {
-	BaseResp *BaseResp `thrift:"BaseResp,1" form:"BaseResp" json:"BaseResp" query:"BaseResp"`
+	BaseResp *BaseResp `thrift:"BaseResp,255" form:"BaseResp" json:"BaseResp" query:"BaseResp"`
 }
 
 func NewUpdatePrintTaskResp() *UpdatePrintTaskResp {
@@ -1941,7 +2248,7 @@ func (p *UpdatePrintTaskResp) GetBaseResp() (v *BaseResp) {
 }
 
 var fieldIDToName_UpdatePrintTaskResp = map[int16]string{
-	1: "BaseResp",
+	255: "BaseResp",
 }
 
 func (p *UpdatePrintTaskResp) IsSetBaseResp() bool {
@@ -1967,9 +2274,9 @@ func (p *UpdatePrintTaskResp) Read(iprot thrift.TProtocol) (err error) {
 		}
 
 		switch fieldId {
-		case 1:
+		case 255:
 			if fieldTypeId == thrift.STRUCT {
-				if err = p.ReadField1(iprot); err != nil {
+				if err = p.ReadField255(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -2007,7 +2314,7 @@ ReadStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
 }
 
-func (p *UpdatePrintTaskResp) ReadField1(iprot thrift.TProtocol) error {
+func (p *UpdatePrintTaskResp) ReadField255(iprot thrift.TProtocol) error {
 	p.BaseResp = NewBaseResp()
 	if err := p.BaseResp.Read(iprot); err != nil {
 		return err
@@ -2021,8 +2328,8 @@ func (p *UpdatePrintTaskResp) Write(oprot thrift.TProtocol) (err error) {
 		goto WriteStructBeginError
 	}
 	if p != nil {
-		if err = p.writeField1(oprot); err != nil {
-			fieldId = 1
+		if err = p.writeField255(oprot); err != nil {
+			fieldId = 255
 			goto WriteFieldError
 		}
 
@@ -2044,8 +2351,8 @@ WriteStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
 }
 
-func (p *UpdatePrintTaskResp) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("BaseResp", thrift.STRUCT, 1); err != nil {
+func (p *UpdatePrintTaskResp) writeField255(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("BaseResp", thrift.STRUCT, 255); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := p.BaseResp.Write(oprot); err != nil {
@@ -2056,9 +2363,9 @@ func (p *UpdatePrintTaskResp) writeField1(oprot thrift.TProtocol) (err error) {
 	}
 	return nil
 WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 255 begin error: ", p), err)
 WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 255 end error: ", p), err)
 }
 
 func (p *UpdatePrintTaskResp) String() string {

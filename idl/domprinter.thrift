@@ -6,6 +6,10 @@ enum RespCodeEnum {
     DBErr = 2,
 }
 
+struct BaseReq {
+    1: required string AuthToken (api.header = "X-DOM-TOKEN"),
+}
+
 struct BaseResp {
     1: RespCodeEnum RespCode,
     2: string RespMessage,
@@ -37,30 +41,38 @@ struct FetchPrintTaskReq {
     1: TaskStateEnum TaskState,
     2: optional i64 OffsetTaskID,
     3: optional i64 LimitTaskNum,
+
+    255: BaseReq BaseReq,
 }
 
 struct FetchPrintTaskResp {
     1: list<PrintTaskDTO> PrintTaskList,
-    2: BaseResp BaseResp,
+
+    255: BaseResp BaseResp,
 }
 
 struct SubmitPrintTaskReq {
     1: PrintTaskDTO PrintTask,
+
+    255: BaseReq BaseReq,
 }
 
 struct SubmitPrintTaskResp {
     1: i64 PrintTaskID,
     2: TaskStateEnum TaskState = TaskStateEnum.Unknown,
-    3: BaseResp BaseResp,
+
+    255: BaseResp BaseResp,
 }
 
 struct UpdatePrintTaskReq {
     1: list<i64> PrintTaskIDList,
     2: TaskStateEnum TaskState,
+
+    255: BaseReq BaseReq,
 }
 
 struct UpdatePrintTaskResp {
-    1: BaseResp BaseResp,
+    255: BaseResp BaseResp,
 }
 
 service DOMPrinterService {
