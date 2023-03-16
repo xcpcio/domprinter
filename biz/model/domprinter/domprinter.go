@@ -10,60 +10,60 @@ import (
 	"github.com/apache/thrift/lib/go/thrift"
 )
 
-type StatusCodeEnum int64
+type RespCodeEnum int64
 
 const (
-	StatusCodeEnum_Success      StatusCodeEnum = 0
-	StatusCodeEnum_ParamInvalid StatusCodeEnum = 1
-	StatusCodeEnum_DBErr        StatusCodeEnum = 2
+	RespCodeEnum_Success      RespCodeEnum = 0
+	RespCodeEnum_ParamInvalid RespCodeEnum = 1
+	RespCodeEnum_DBErr        RespCodeEnum = 2
 )
 
-func (p StatusCodeEnum) String() string {
+func (p RespCodeEnum) String() string {
 	switch p {
-	case StatusCodeEnum_Success:
+	case RespCodeEnum_Success:
 		return "Success"
-	case StatusCodeEnum_ParamInvalid:
+	case RespCodeEnum_ParamInvalid:
 		return "ParamInvalid"
-	case StatusCodeEnum_DBErr:
+	case RespCodeEnum_DBErr:
 		return "DBErr"
 	}
 	return "<UNSET>"
 }
 
-func StatusCodeEnumFromString(s string) (StatusCodeEnum, error) {
+func RespCodeEnumFromString(s string) (RespCodeEnum, error) {
 	switch s {
 	case "Success":
-		return StatusCodeEnum_Success, nil
+		return RespCodeEnum_Success, nil
 	case "ParamInvalid":
-		return StatusCodeEnum_ParamInvalid, nil
+		return RespCodeEnum_ParamInvalid, nil
 	case "DBErr":
-		return StatusCodeEnum_DBErr, nil
+		return RespCodeEnum_DBErr, nil
 	}
-	return StatusCodeEnum(0), fmt.Errorf("not a valid StatusCodeEnum string")
+	return RespCodeEnum(0), fmt.Errorf("not a valid RespCodeEnum string")
 }
 
-func StatusCodeEnumPtr(v StatusCodeEnum) *StatusCodeEnum { return &v }
+func RespCodeEnumPtr(v RespCodeEnum) *RespCodeEnum { return &v }
 
-func (p StatusCodeEnum) MarshalText() ([]byte, error) {
+func (p RespCodeEnum) MarshalText() ([]byte, error) {
 	return []byte(p.String()), nil
 }
 
-func (p *StatusCodeEnum) UnmarshalText(text []byte) error {
-	q, err := StatusCodeEnumFromString(string(text))
+func (p *RespCodeEnum) UnmarshalText(text []byte) error {
+	q, err := RespCodeEnumFromString(string(text))
 	if err != nil {
 		return err
 	}
 	*p = q
 	return nil
 }
-func (p *StatusCodeEnum) Scan(value interface{}) (err error) {
+func (p *RespCodeEnum) Scan(value interface{}) (err error) {
 	var result sql.NullInt64
 	err = result.Scan(value)
-	*p = StatusCodeEnum(result.Int64)
+	*p = RespCodeEnum(result.Int64)
 	return
 }
 
-func (p *StatusCodeEnum) Value() (driver.Value, error) {
+func (p *RespCodeEnum) Value() (driver.Value, error) {
 	if p == nil {
 		return nil, nil
 	}
@@ -136,25 +136,25 @@ func (p *TaskStateEnum) Value() (driver.Value, error) {
 }
 
 type BaseResp struct {
-	StatusCode    StatusCodeEnum `thrift:"StatusCode,1" form:"StatusCode" json:"StatusCode" query:"StatusCode"`
-	StatusMessage string         `thrift:"StatusMessage,2" form:"StatusMessage" json:"StatusMessage" query:"StatusMessage"`
+	RespCode    RespCodeEnum `thrift:"RespCode,1" form:"RespCode" json:"RespCode" query:"RespCode"`
+	RespMessage string       `thrift:"RespMessage,2" form:"RespMessage" json:"RespMessage" query:"RespMessage"`
 }
 
 func NewBaseResp() *BaseResp {
 	return &BaseResp{}
 }
 
-func (p *BaseResp) GetStatusCode() (v StatusCodeEnum) {
-	return p.StatusCode
+func (p *BaseResp) GetRespCode() (v RespCodeEnum) {
+	return p.RespCode
 }
 
-func (p *BaseResp) GetStatusMessage() (v string) {
-	return p.StatusMessage
+func (p *BaseResp) GetRespMessage() (v string) {
+	return p.RespMessage
 }
 
 var fieldIDToName_BaseResp = map[int16]string{
-	1: "StatusCode",
-	2: "StatusMessage",
+	1: "RespCode",
+	2: "RespMessage",
 }
 
 func (p *BaseResp) Read(iprot thrift.TProtocol) (err error) {
@@ -230,7 +230,7 @@ func (p *BaseResp) ReadField1(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadI32(); err != nil {
 		return err
 	} else {
-		p.StatusCode = StatusCodeEnum(v)
+		p.RespCode = RespCodeEnum(v)
 	}
 	return nil
 }
@@ -239,7 +239,7 @@ func (p *BaseResp) ReadField2(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
-		p.StatusMessage = v
+		p.RespMessage = v
 	}
 	return nil
 }
@@ -278,10 +278,10 @@ WriteStructEndError:
 }
 
 func (p *BaseResp) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("StatusCode", thrift.I32, 1); err != nil {
+	if err = oprot.WriteFieldBegin("RespCode", thrift.I32, 1); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI32(int32(p.StatusCode)); err != nil {
+	if err := oprot.WriteI32(int32(p.RespCode)); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -295,10 +295,10 @@ WriteFieldEndError:
 }
 
 func (p *BaseResp) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("StatusMessage", thrift.STRING, 2); err != nil {
+	if err = oprot.WriteFieldBegin("RespMessage", thrift.STRING, 2); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.StatusMessage); err != nil {
+	if err := oprot.WriteString(p.RespMessage); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -318,68 +318,93 @@ func (p *BaseResp) String() string {
 	return fmt.Sprintf("BaseResp(%+v)", *p)
 }
 
-type PrintTaskBody struct {
-	Timestamp  int64  `thrift:"Timestamp,1" form:"Timestamp" json:"Timestamp" query:"Timestamp"`
-	UserName   string `thrift:"UserName,2" form:"UserName" json:"UserName" query:"UserName"`
-	TeamName   string `thrift:"TeamName,3" form:"TeamName" json:"TeamName" query:"TeamName"`
-	TeamID     string `thrift:"TeamID,4" form:"TeamID" json:"TeamID" query:"TeamID"`
-	Location   string `thrift:"Location,5" form:"Location" json:"Location" query:"Location"`
-	Language   string `thrift:"Language,6" form:"Language" json:"Language" query:"Language"`
-	FileName   string `thrift:"FileName,7" form:"FileName" json:"FileName" query:"FileName"`
-	SourceCode string `thrift:"SourceCode,8" form:"SourceCode" json:"SourceCode" query:"SourceCode"`
+type PrintTaskDTO struct {
+	SubmitTime  string        `thrift:"SubmitTime,1" form:"SubmitTime" json:"SubmitTime" query:"SubmitTime"`
+	UserName    string        `thrift:"UserName,2" form:"UserName" json:"UserName" query:"UserName"`
+	TeamName    string        `thrift:"TeamName,3" form:"TeamName" json:"TeamName" query:"TeamName"`
+	TeamID      string        `thrift:"TeamID,4" form:"TeamID" json:"TeamID" query:"TeamID"`
+	Location    string        `thrift:"Location,5" form:"Location" json:"Location" query:"Location"`
+	Language    string        `thrift:"Language,6" form:"Language" json:"Language" query:"Language"`
+	FileName    string        `thrift:"FileName,7" form:"FileName" json:"FileName" query:"FileName"`
+	SourceCode  string        `thrift:"SourceCode,8" form:"SourceCode" json:"SourceCode" query:"SourceCode"`
+	PrintTaskID *int64        `thrift:"PrintTaskID,9,optional" form:"PrintTaskID" json:"PrintTaskID,omitempty" query:"PrintTaskID"`
+	TaskState   TaskStateEnum `thrift:"TaskState,10,required" form:"TaskState,required" json:"TaskState,required" query:"TaskState,required"`
 }
 
-func NewPrintTaskBody() *PrintTaskBody {
-	return &PrintTaskBody{}
+func NewPrintTaskDTO() *PrintTaskDTO {
+	return &PrintTaskDTO{
+
+		TaskState: TaskStateEnum_Unknown,
+	}
 }
 
-func (p *PrintTaskBody) GetTimestamp() (v int64) {
-	return p.Timestamp
+func (p *PrintTaskDTO) GetSubmitTime() (v string) {
+	return p.SubmitTime
 }
 
-func (p *PrintTaskBody) GetUserName() (v string) {
+func (p *PrintTaskDTO) GetUserName() (v string) {
 	return p.UserName
 }
 
-func (p *PrintTaskBody) GetTeamName() (v string) {
+func (p *PrintTaskDTO) GetTeamName() (v string) {
 	return p.TeamName
 }
 
-func (p *PrintTaskBody) GetTeamID() (v string) {
+func (p *PrintTaskDTO) GetTeamID() (v string) {
 	return p.TeamID
 }
 
-func (p *PrintTaskBody) GetLocation() (v string) {
+func (p *PrintTaskDTO) GetLocation() (v string) {
 	return p.Location
 }
 
-func (p *PrintTaskBody) GetLanguage() (v string) {
+func (p *PrintTaskDTO) GetLanguage() (v string) {
 	return p.Language
 }
 
-func (p *PrintTaskBody) GetFileName() (v string) {
+func (p *PrintTaskDTO) GetFileName() (v string) {
 	return p.FileName
 }
 
-func (p *PrintTaskBody) GetSourceCode() (v string) {
+func (p *PrintTaskDTO) GetSourceCode() (v string) {
 	return p.SourceCode
 }
 
-var fieldIDToName_PrintTaskBody = map[int16]string{
-	1: "Timestamp",
-	2: "UserName",
-	3: "TeamName",
-	4: "TeamID",
-	5: "Location",
-	6: "Language",
-	7: "FileName",
-	8: "SourceCode",
+var PrintTaskDTO_PrintTaskID_DEFAULT int64
+
+func (p *PrintTaskDTO) GetPrintTaskID() (v int64) {
+	if !p.IsSetPrintTaskID() {
+		return PrintTaskDTO_PrintTaskID_DEFAULT
+	}
+	return *p.PrintTaskID
 }
 
-func (p *PrintTaskBody) Read(iprot thrift.TProtocol) (err error) {
+func (p *PrintTaskDTO) GetTaskState() (v TaskStateEnum) {
+	return p.TaskState
+}
+
+var fieldIDToName_PrintTaskDTO = map[int16]string{
+	1:  "SubmitTime",
+	2:  "UserName",
+	3:  "TeamName",
+	4:  "TeamID",
+	5:  "Location",
+	6:  "Language",
+	7:  "FileName",
+	8:  "SourceCode",
+	9:  "PrintTaskID",
+	10: "TaskState",
+}
+
+func (p *PrintTaskDTO) IsSetPrintTaskID() bool {
+	return p.PrintTaskID != nil
+}
+
+func (p *PrintTaskDTO) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
 	var fieldId int16
+	var issetTaskState bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -396,7 +421,7 @@ func (p *PrintTaskBody) Read(iprot thrift.TProtocol) (err error) {
 
 		switch fieldId {
 		case 1:
-			if fieldTypeId == thrift.I64 {
+			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField1(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -475,6 +500,27 @@ func (p *PrintTaskBody) Read(iprot thrift.TProtocol) (err error) {
 					goto SkipFieldError
 				}
 			}
+		case 9:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField9(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 10:
+			if fieldTypeId == thrift.I32 {
+				if err = p.ReadField10(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetTaskState = true
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
 		default:
 			if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
@@ -489,13 +535,17 @@ func (p *PrintTaskBody) Read(iprot thrift.TProtocol) (err error) {
 		goto ReadStructEndError
 	}
 
+	if !issetTaskState {
+		fieldId = 10
+		goto RequiredFieldNotSetError
+	}
 	return nil
 ReadStructBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
 ReadFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
 ReadFieldError:
-	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_PrintTaskBody[fieldId]), err)
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_PrintTaskDTO[fieldId]), err)
 SkipFieldError:
 	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
 
@@ -503,18 +553,20 @@ ReadFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_PrintTaskDTO[fieldId]))
 }
 
-func (p *PrintTaskBody) ReadField1(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadI64(); err != nil {
+func (p *PrintTaskDTO) ReadField1(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
-		p.Timestamp = v
+		p.SubmitTime = v
 	}
 	return nil
 }
 
-func (p *PrintTaskBody) ReadField2(iprot thrift.TProtocol) error {
+func (p *PrintTaskDTO) ReadField2(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
@@ -523,7 +575,7 @@ func (p *PrintTaskBody) ReadField2(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *PrintTaskBody) ReadField3(iprot thrift.TProtocol) error {
+func (p *PrintTaskDTO) ReadField3(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
@@ -532,7 +584,7 @@ func (p *PrintTaskBody) ReadField3(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *PrintTaskBody) ReadField4(iprot thrift.TProtocol) error {
+func (p *PrintTaskDTO) ReadField4(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
@@ -541,7 +593,7 @@ func (p *PrintTaskBody) ReadField4(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *PrintTaskBody) ReadField5(iprot thrift.TProtocol) error {
+func (p *PrintTaskDTO) ReadField5(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
@@ -550,7 +602,7 @@ func (p *PrintTaskBody) ReadField5(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *PrintTaskBody) ReadField6(iprot thrift.TProtocol) error {
+func (p *PrintTaskDTO) ReadField6(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
@@ -559,7 +611,7 @@ func (p *PrintTaskBody) ReadField6(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *PrintTaskBody) ReadField7(iprot thrift.TProtocol) error {
+func (p *PrintTaskDTO) ReadField7(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
@@ -568,7 +620,7 @@ func (p *PrintTaskBody) ReadField7(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *PrintTaskBody) ReadField8(iprot thrift.TProtocol) error {
+func (p *PrintTaskDTO) ReadField8(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
@@ -577,9 +629,27 @@ func (p *PrintTaskBody) ReadField8(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *PrintTaskBody) Write(oprot thrift.TProtocol) (err error) {
+func (p *PrintTaskDTO) ReadField9(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		p.PrintTaskID = &v
+	}
+	return nil
+}
+
+func (p *PrintTaskDTO) ReadField10(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI32(); err != nil {
+		return err
+	} else {
+		p.TaskState = TaskStateEnum(v)
+	}
+	return nil
+}
+
+func (p *PrintTaskDTO) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
-	if err = oprot.WriteStructBegin("PrintTaskBody"); err != nil {
+	if err = oprot.WriteStructBegin("PrintTaskDTO"); err != nil {
 		goto WriteStructBeginError
 	}
 	if p != nil {
@@ -615,326 +685,12 @@ func (p *PrintTaskBody) Write(oprot thrift.TProtocol) (err error) {
 			fieldId = 8
 			goto WriteFieldError
 		}
-
-	}
-	if err = oprot.WriteFieldStop(); err != nil {
-		goto WriteFieldStopError
-	}
-	if err = oprot.WriteStructEnd(); err != nil {
-		goto WriteStructEndError
-	}
-	return nil
-WriteStructBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
-WriteFieldError:
-	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
-WriteFieldStopError:
-	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
-WriteStructEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
-}
-
-func (p *PrintTaskBody) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("Timestamp", thrift.I64, 1); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteI64(p.Timestamp); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
-}
-
-func (p *PrintTaskBody) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("UserName", thrift.STRING, 2); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteString(p.UserName); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
-}
-
-func (p *PrintTaskBody) writeField3(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("TeamName", thrift.STRING, 3); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteString(p.TeamName); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
-}
-
-func (p *PrintTaskBody) writeField4(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("TeamID", thrift.STRING, 4); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteString(p.TeamID); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 4 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
-}
-
-func (p *PrintTaskBody) writeField5(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("Location", thrift.STRING, 5); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteString(p.Location); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 5 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 5 end error: ", p), err)
-}
-
-func (p *PrintTaskBody) writeField6(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("Language", thrift.STRING, 6); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteString(p.Language); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 6 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 6 end error: ", p), err)
-}
-
-func (p *PrintTaskBody) writeField7(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("FileName", thrift.STRING, 7); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteString(p.FileName); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 7 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 7 end error: ", p), err)
-}
-
-func (p *PrintTaskBody) writeField8(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("SourceCode", thrift.STRING, 8); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteString(p.SourceCode); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 8 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 8 end error: ", p), err)
-}
-
-func (p *PrintTaskBody) String() string {
-	if p == nil {
-		return "<nil>"
-	}
-	return fmt.Sprintf("PrintTaskBody(%+v)", *p)
-}
-
-type PrintTaskDTO struct {
-	PrintTaskID   int64          `thrift:"PrintTaskID,1" form:"PrintTaskID" json:"PrintTaskID" query:"PrintTaskID"`
-	TaskState     TaskStateEnum  `thrift:"TaskState,2" form:"TaskState" json:"TaskState" query:"TaskState"`
-	PrintTaskBody *PrintTaskBody `thrift:"PrintTaskBody,3" form:"PrintTaskBody" json:"PrintTaskBody" query:"PrintTaskBody"`
-}
-
-func NewPrintTaskDTO() *PrintTaskDTO {
-	return &PrintTaskDTO{}
-}
-
-func (p *PrintTaskDTO) GetPrintTaskID() (v int64) {
-	return p.PrintTaskID
-}
-
-func (p *PrintTaskDTO) GetTaskState() (v TaskStateEnum) {
-	return p.TaskState
-}
-
-var PrintTaskDTO_PrintTaskBody_DEFAULT *PrintTaskBody
-
-func (p *PrintTaskDTO) GetPrintTaskBody() (v *PrintTaskBody) {
-	if !p.IsSetPrintTaskBody() {
-		return PrintTaskDTO_PrintTaskBody_DEFAULT
-	}
-	return p.PrintTaskBody
-}
-
-var fieldIDToName_PrintTaskDTO = map[int16]string{
-	1: "PrintTaskID",
-	2: "TaskState",
-	3: "PrintTaskBody",
-}
-
-func (p *PrintTaskDTO) IsSetPrintTaskBody() bool {
-	return p.PrintTaskBody != nil
-}
-
-func (p *PrintTaskDTO) Read(iprot thrift.TProtocol) (err error) {
-
-	var fieldTypeId thrift.TType
-	var fieldId int16
-
-	if _, err = iprot.ReadStructBegin(); err != nil {
-		goto ReadStructBeginError
-	}
-
-	for {
-		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
-		if err != nil {
-			goto ReadFieldBeginError
-		}
-		if fieldTypeId == thrift.STOP {
-			break
-		}
-
-		switch fieldId {
-		case 1:
-			if fieldTypeId == thrift.I64 {
-				if err = p.ReadField1(iprot); err != nil {
-					goto ReadFieldError
-				}
-			} else {
-				if err = iprot.Skip(fieldTypeId); err != nil {
-					goto SkipFieldError
-				}
-			}
-		case 2:
-			if fieldTypeId == thrift.I32 {
-				if err = p.ReadField2(iprot); err != nil {
-					goto ReadFieldError
-				}
-			} else {
-				if err = iprot.Skip(fieldTypeId); err != nil {
-					goto SkipFieldError
-				}
-			}
-		case 3:
-			if fieldTypeId == thrift.STRUCT {
-				if err = p.ReadField3(iprot); err != nil {
-					goto ReadFieldError
-				}
-			} else {
-				if err = iprot.Skip(fieldTypeId); err != nil {
-					goto SkipFieldError
-				}
-			}
-		default:
-			if err = iprot.Skip(fieldTypeId); err != nil {
-				goto SkipFieldError
-			}
-		}
-
-		if err = iprot.ReadFieldEnd(); err != nil {
-			goto ReadFieldEndError
-		}
-	}
-	if err = iprot.ReadStructEnd(); err != nil {
-		goto ReadStructEndError
-	}
-
-	return nil
-ReadStructBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
-ReadFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
-ReadFieldError:
-	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_PrintTaskDTO[fieldId]), err)
-SkipFieldError:
-	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
-
-ReadFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
-ReadStructEndError:
-	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
-}
-
-func (p *PrintTaskDTO) ReadField1(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadI64(); err != nil {
-		return err
-	} else {
-		p.PrintTaskID = v
-	}
-	return nil
-}
-
-func (p *PrintTaskDTO) ReadField2(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadI32(); err != nil {
-		return err
-	} else {
-		p.TaskState = TaskStateEnum(v)
-	}
-	return nil
-}
-
-func (p *PrintTaskDTO) ReadField3(iprot thrift.TProtocol) error {
-	p.PrintTaskBody = NewPrintTaskBody()
-	if err := p.PrintTaskBody.Read(iprot); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (p *PrintTaskDTO) Write(oprot thrift.TProtocol) (err error) {
-	var fieldId int16
-	if err = oprot.WriteStructBegin("PrintTaskDTO"); err != nil {
-		goto WriteStructBeginError
-	}
-	if p != nil {
-		if err = p.writeField1(oprot); err != nil {
-			fieldId = 1
+		if err = p.writeField9(oprot); err != nil {
+			fieldId = 9
 			goto WriteFieldError
 		}
-		if err = p.writeField2(oprot); err != nil {
-			fieldId = 2
-			goto WriteFieldError
-		}
-		if err = p.writeField3(oprot); err != nil {
-			fieldId = 3
+		if err = p.writeField10(oprot); err != nil {
+			fieldId = 10
 			goto WriteFieldError
 		}
 
@@ -957,10 +713,10 @@ WriteStructEndError:
 }
 
 func (p *PrintTaskDTO) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("PrintTaskID", thrift.I64, 1); err != nil {
+	if err = oprot.WriteFieldBegin("SubmitTime", thrift.STRING, 1); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI64(p.PrintTaskID); err != nil {
+	if err := oprot.WriteString(p.SubmitTime); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -974,10 +730,10 @@ WriteFieldEndError:
 }
 
 func (p *PrintTaskDTO) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("TaskState", thrift.I32, 2); err != nil {
+	if err = oprot.WriteFieldBegin("UserName", thrift.STRING, 2); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI32(int32(p.TaskState)); err != nil {
+	if err := oprot.WriteString(p.UserName); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -991,10 +747,10 @@ WriteFieldEndError:
 }
 
 func (p *PrintTaskDTO) writeField3(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("PrintTaskBody", thrift.STRUCT, 3); err != nil {
+	if err = oprot.WriteFieldBegin("TeamName", thrift.STRING, 3); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := p.PrintTaskBody.Write(oprot); err != nil {
+	if err := oprot.WriteString(p.TeamName); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -1007,6 +763,127 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
 }
 
+func (p *PrintTaskDTO) writeField4(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("TeamID", thrift.STRING, 4); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.TeamID); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
+}
+
+func (p *PrintTaskDTO) writeField5(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("Location", thrift.STRING, 5); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.Location); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 5 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 5 end error: ", p), err)
+}
+
+func (p *PrintTaskDTO) writeField6(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("Language", thrift.STRING, 6); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.Language); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 6 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 6 end error: ", p), err)
+}
+
+func (p *PrintTaskDTO) writeField7(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("FileName", thrift.STRING, 7); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.FileName); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 7 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 7 end error: ", p), err)
+}
+
+func (p *PrintTaskDTO) writeField8(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("SourceCode", thrift.STRING, 8); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.SourceCode); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 8 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 8 end error: ", p), err)
+}
+
+func (p *PrintTaskDTO) writeField9(oprot thrift.TProtocol) (err error) {
+	if p.IsSetPrintTaskID() {
+		if err = oprot.WriteFieldBegin("PrintTaskID", thrift.I64, 9); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteI64(*p.PrintTaskID); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 9 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 9 end error: ", p), err)
+}
+
+func (p *PrintTaskDTO) writeField10(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("TaskState", thrift.I32, 10); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI32(int32(p.TaskState)); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 10 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 10 end error: ", p), err)
+}
+
 func (p *PrintTaskDTO) String() string {
 	if p == nil {
 		return "<nil>"
@@ -1016,8 +893,8 @@ func (p *PrintTaskDTO) String() string {
 
 type FetchPrintTaskReq struct {
 	TaskState    TaskStateEnum `thrift:"TaskState,1" form:"TaskState" json:"TaskState" query:"TaskState"`
-	StartTaskID  *int64        `thrift:"StartTaskID,2,optional" form:"StartTaskID" json:"StartTaskID,omitempty" query:"StartTaskID"`
-	TaskNumLimit *int64        `thrift:"TaskNumLimit,3,optional" form:"TaskNumLimit" json:"TaskNumLimit,omitempty" query:"TaskNumLimit"`
+	OffsetTaskID *int64        `thrift:"OffsetTaskID,2,optional" form:"OffsetTaskID" json:"OffsetTaskID,omitempty" query:"OffsetTaskID"`
+	LimitTaskNum *int64        `thrift:"LimitTaskNum,3,optional" form:"LimitTaskNum" json:"LimitTaskNum,omitempty" query:"LimitTaskNum"`
 }
 
 func NewFetchPrintTaskReq() *FetchPrintTaskReq {
@@ -1028,36 +905,36 @@ func (p *FetchPrintTaskReq) GetTaskState() (v TaskStateEnum) {
 	return p.TaskState
 }
 
-var FetchPrintTaskReq_StartTaskID_DEFAULT int64
+var FetchPrintTaskReq_OffsetTaskID_DEFAULT int64
 
-func (p *FetchPrintTaskReq) GetStartTaskID() (v int64) {
-	if !p.IsSetStartTaskID() {
-		return FetchPrintTaskReq_StartTaskID_DEFAULT
+func (p *FetchPrintTaskReq) GetOffsetTaskID() (v int64) {
+	if !p.IsSetOffsetTaskID() {
+		return FetchPrintTaskReq_OffsetTaskID_DEFAULT
 	}
-	return *p.StartTaskID
+	return *p.OffsetTaskID
 }
 
-var FetchPrintTaskReq_TaskNumLimit_DEFAULT int64
+var FetchPrintTaskReq_LimitTaskNum_DEFAULT int64
 
-func (p *FetchPrintTaskReq) GetTaskNumLimit() (v int64) {
-	if !p.IsSetTaskNumLimit() {
-		return FetchPrintTaskReq_TaskNumLimit_DEFAULT
+func (p *FetchPrintTaskReq) GetLimitTaskNum() (v int64) {
+	if !p.IsSetLimitTaskNum() {
+		return FetchPrintTaskReq_LimitTaskNum_DEFAULT
 	}
-	return *p.TaskNumLimit
+	return *p.LimitTaskNum
 }
 
 var fieldIDToName_FetchPrintTaskReq = map[int16]string{
 	1: "TaskState",
-	2: "StartTaskID",
-	3: "TaskNumLimit",
+	2: "OffsetTaskID",
+	3: "LimitTaskNum",
 }
 
-func (p *FetchPrintTaskReq) IsSetStartTaskID() bool {
-	return p.StartTaskID != nil
+func (p *FetchPrintTaskReq) IsSetOffsetTaskID() bool {
+	return p.OffsetTaskID != nil
 }
 
-func (p *FetchPrintTaskReq) IsSetTaskNumLimit() bool {
-	return p.TaskNumLimit != nil
+func (p *FetchPrintTaskReq) IsSetLimitTaskNum() bool {
+	return p.LimitTaskNum != nil
 }
 
 func (p *FetchPrintTaskReq) Read(iprot thrift.TProtocol) (err error) {
@@ -1152,7 +1029,7 @@ func (p *FetchPrintTaskReq) ReadField2(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
 	} else {
-		p.StartTaskID = &v
+		p.OffsetTaskID = &v
 	}
 	return nil
 }
@@ -1161,7 +1038,7 @@ func (p *FetchPrintTaskReq) ReadField3(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
 	} else {
-		p.TaskNumLimit = &v
+		p.LimitTaskNum = &v
 	}
 	return nil
 }
@@ -1221,11 +1098,11 @@ WriteFieldEndError:
 }
 
 func (p *FetchPrintTaskReq) writeField2(oprot thrift.TProtocol) (err error) {
-	if p.IsSetStartTaskID() {
-		if err = oprot.WriteFieldBegin("StartTaskID", thrift.I64, 2); err != nil {
+	if p.IsSetOffsetTaskID() {
+		if err = oprot.WriteFieldBegin("OffsetTaskID", thrift.I64, 2); err != nil {
 			goto WriteFieldBeginError
 		}
-		if err := oprot.WriteI64(*p.StartTaskID); err != nil {
+		if err := oprot.WriteI64(*p.OffsetTaskID); err != nil {
 			return err
 		}
 		if err = oprot.WriteFieldEnd(); err != nil {
@@ -1240,11 +1117,11 @@ WriteFieldEndError:
 }
 
 func (p *FetchPrintTaskReq) writeField3(oprot thrift.TProtocol) (err error) {
-	if p.IsSetTaskNumLimit() {
-		if err = oprot.WriteFieldBegin("TaskNumLimit", thrift.I64, 3); err != nil {
+	if p.IsSetLimitTaskNum() {
+		if err = oprot.WriteFieldBegin("LimitTaskNum", thrift.I64, 3); err != nil {
 			goto WriteFieldBeginError
 		}
-		if err := oprot.WriteI64(*p.TaskNumLimit); err != nil {
+		if err := oprot.WriteI64(*p.LimitTaskNum); err != nil {
 			return err
 		}
 		if err = oprot.WriteFieldEnd(); err != nil {
@@ -1266,16 +1143,16 @@ func (p *FetchPrintTaskReq) String() string {
 }
 
 type FetchPrintTaskResp struct {
-	PrintTaskBodyList []*PrintTaskBody `thrift:"PrintTaskBodyList,1" form:"PrintTaskBodyList" json:"PrintTaskBodyList" query:"PrintTaskBodyList"`
-	BaseResp          *BaseResp        `thrift:"BaseResp,2" form:"BaseResp" json:"BaseResp" query:"BaseResp"`
+	PrintTaskList []*PrintTaskDTO `thrift:"PrintTaskList,1" form:"PrintTaskList" json:"PrintTaskList" query:"PrintTaskList"`
+	BaseResp      *BaseResp       `thrift:"BaseResp,2" form:"BaseResp" json:"BaseResp" query:"BaseResp"`
 }
 
 func NewFetchPrintTaskResp() *FetchPrintTaskResp {
 	return &FetchPrintTaskResp{}
 }
 
-func (p *FetchPrintTaskResp) GetPrintTaskBodyList() (v []*PrintTaskBody) {
-	return p.PrintTaskBodyList
+func (p *FetchPrintTaskResp) GetPrintTaskList() (v []*PrintTaskDTO) {
+	return p.PrintTaskList
 }
 
 var FetchPrintTaskResp_BaseResp_DEFAULT *BaseResp
@@ -1288,7 +1165,7 @@ func (p *FetchPrintTaskResp) GetBaseResp() (v *BaseResp) {
 }
 
 var fieldIDToName_FetchPrintTaskResp = map[int16]string{
-	1: "PrintTaskBodyList",
+	1: "PrintTaskList",
 	2: "BaseResp",
 }
 
@@ -1370,14 +1247,14 @@ func (p *FetchPrintTaskResp) ReadField1(iprot thrift.TProtocol) error {
 	if err != nil {
 		return err
 	}
-	p.PrintTaskBodyList = make([]*PrintTaskBody, 0, size)
+	p.PrintTaskList = make([]*PrintTaskDTO, 0, size)
 	for i := 0; i < size; i++ {
-		_elem := NewPrintTaskBody()
+		_elem := NewPrintTaskDTO()
 		if err := _elem.Read(iprot); err != nil {
 			return err
 		}
 
-		p.PrintTaskBodyList = append(p.PrintTaskBodyList, _elem)
+		p.PrintTaskList = append(p.PrintTaskList, _elem)
 	}
 	if err := iprot.ReadListEnd(); err != nil {
 		return err
@@ -1427,13 +1304,13 @@ WriteStructEndError:
 }
 
 func (p *FetchPrintTaskResp) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("PrintTaskBodyList", thrift.LIST, 1); err != nil {
+	if err = oprot.WriteFieldBegin("PrintTaskList", thrift.LIST, 1); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteListBegin(thrift.STRUCT, len(p.PrintTaskBodyList)); err != nil {
+	if err := oprot.WriteListBegin(thrift.STRUCT, len(p.PrintTaskList)); err != nil {
 		return err
 	}
-	for _, v := range p.PrintTaskBodyList {
+	for _, v := range p.PrintTaskList {
 		if err := v.Write(oprot); err != nil {
 			return err
 		}
@@ -1476,28 +1353,28 @@ func (p *FetchPrintTaskResp) String() string {
 }
 
 type SubmitPrintTaskReq struct {
-	PrintTaskBody *PrintTaskBody `thrift:"PrintTaskBody,1" form:"PrintTaskBody" json:"PrintTaskBody" query:"PrintTaskBody"`
+	PrintTask *PrintTaskDTO `thrift:"PrintTask,1" form:"PrintTask" json:"PrintTask" query:"PrintTask"`
 }
 
 func NewSubmitPrintTaskReq() *SubmitPrintTaskReq {
 	return &SubmitPrintTaskReq{}
 }
 
-var SubmitPrintTaskReq_PrintTaskBody_DEFAULT *PrintTaskBody
+var SubmitPrintTaskReq_PrintTask_DEFAULT *PrintTaskDTO
 
-func (p *SubmitPrintTaskReq) GetPrintTaskBody() (v *PrintTaskBody) {
-	if !p.IsSetPrintTaskBody() {
-		return SubmitPrintTaskReq_PrintTaskBody_DEFAULT
+func (p *SubmitPrintTaskReq) GetPrintTask() (v *PrintTaskDTO) {
+	if !p.IsSetPrintTask() {
+		return SubmitPrintTaskReq_PrintTask_DEFAULT
 	}
-	return p.PrintTaskBody
+	return p.PrintTask
 }
 
 var fieldIDToName_SubmitPrintTaskReq = map[int16]string{
-	1: "PrintTaskBody",
+	1: "PrintTask",
 }
 
-func (p *SubmitPrintTaskReq) IsSetPrintTaskBody() bool {
-	return p.PrintTaskBody != nil
+func (p *SubmitPrintTaskReq) IsSetPrintTask() bool {
+	return p.PrintTask != nil
 }
 
 func (p *SubmitPrintTaskReq) Read(iprot thrift.TProtocol) (err error) {
@@ -1560,8 +1437,8 @@ ReadStructEndError:
 }
 
 func (p *SubmitPrintTaskReq) ReadField1(iprot thrift.TProtocol) error {
-	p.PrintTaskBody = NewPrintTaskBody()
-	if err := p.PrintTaskBody.Read(iprot); err != nil {
+	p.PrintTask = NewPrintTaskDTO()
+	if err := p.PrintTask.Read(iprot); err != nil {
 		return err
 	}
 	return nil
@@ -1597,10 +1474,10 @@ WriteStructEndError:
 }
 
 func (p *SubmitPrintTaskReq) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("PrintTaskBody", thrift.STRUCT, 1); err != nil {
+	if err = oprot.WriteFieldBegin("PrintTask", thrift.STRUCT, 1); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := p.PrintTaskBody.Write(oprot); err != nil {
+	if err := p.PrintTask.Write(oprot); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {

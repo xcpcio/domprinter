@@ -1,14 +1,14 @@
 namespace go domprinter
 
-enum StatusCodeEnum {
+enum RespCodeEnum {
     Success = 0,
     ParamInvalid = 1,
     DBErr = 2,
 }
 
 struct BaseResp {
-    1: StatusCodeEnum StatusCode,
-    2: string StatusMessage,
+    1: RespCodeEnum RespCode,
+    2: string RespMessage,
 }
 
 enum TaskStateEnum {
@@ -19,8 +19,8 @@ enum TaskStateEnum {
     Abandoned = 3,
 }
 
-struct PrintTaskBody {
-    1: i64 Timestamp,
+struct PrintTaskDTO {
+    1: string SubmitTime,
     2: string UserName,
     3: string TeamName,
     4: string TeamID,
@@ -28,27 +28,24 @@ struct PrintTaskBody {
     6: string Language,
     7: string FileName,
     8: string SourceCode,
-}
 
-struct PrintTaskDTO {
-    1: i64 PrintTaskID,
-    2: TaskStateEnum TaskState,
-    3: PrintTaskBody PrintTaskBody,
+    9: optional i64 PrintTaskID,
+    10: required TaskStateEnum TaskState = TaskStateEnum.Unknown,
 }
 
 struct FetchPrintTaskReq {
     1: TaskStateEnum TaskState,
-    2: optional i64 StartTaskID,
-    3: optional i64 TaskNumLimit,
+    2: optional i64 OffsetTaskID,
+    3: optional i64 LimitTaskNum,
 }
 
 struct FetchPrintTaskResp {
-    1: list<PrintTaskBody> PrintTaskBodyList,
+    1: list<PrintTaskDTO> PrintTaskList,
     2: BaseResp BaseResp,
 }
 
 struct SubmitPrintTaskReq {
-    1: PrintTaskBody PrintTaskBody,
+    1: PrintTaskDTO PrintTask,
 }
 
 struct SubmitPrintTaskResp {
