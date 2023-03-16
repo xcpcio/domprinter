@@ -2,12 +2,15 @@ idl_gen:
 	hz update --idl ./idl/*.thrift --json_enumstr
 
 idl_client_gen:
+	cd hertz_client && \
 	hz client \
-		--idl ./idl/*.thrift \
-		--model_dir=./hertz_client \
-		--client_dir=./hertz_client \
+		--mod github.com/Dup4/domprinter/hertz_client \
+		--idl ../idl/*.thrift \
+		--model_dir=./ \
+		--client_dir=./ \
 		--json_enumstr \
-		-t=template=slim
+		-t=template=slim \
+	&& go mod tidy
 
 gorm_gen:
 	go run ./cmd/gorm_gen/generate.go
