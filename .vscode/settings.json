@@ -8,6 +8,7 @@
     "cSpell.words": [
         "cloudwego",
         "consts",
-        "domprinter"
+        "domprinter",
+        "gorm"
     ],
 }
