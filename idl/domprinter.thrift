@@ -50,7 +50,8 @@ struct SubmitPrintTaskReq {
 
 struct SubmitPrintTaskResp {
     1: i64 PrintTaskID,
-    2: BaseResp BaseResp,
+    2: TaskStateEnum TaskState = TaskStateEnum.Unknown,
+    3: BaseResp BaseResp,
 }
 
 struct UpdatePrintTaskReq {

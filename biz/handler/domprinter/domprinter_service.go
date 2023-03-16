@@ -79,6 +79,10 @@ func SubmitPrintTask(ctx context.Context, c *app.RequestContext) {
 	}
 
 	resp.PrintTaskID = printTaskDAO.ID
+
+	state, _ := domprinter.TaskStateEnumFromString(printTaskDAO.State)
+	resp.TaskState = state
+
 	bResp.RespCode = domprinter.RespCodeEnum_Success
 	bResp.RespMessage = "Submit PrintTask Successfully"
 	c.JSON(consts.StatusOK, resp)
@@ -89,13 +93,30 @@ func SubmitPrintTask(ctx context.Context, c *app.RequestContext) {
 func UpdatePrintTask(ctx context.Context, c *app.RequestContext) {
 	var err error
 	var req domprinter.UpdatePrintTaskReq
+
+	resp := domprinter.NewUpdatePrintTaskResp()
+	resp.BaseResp = domprinter.NewBaseResp()
+	bResp := resp.BaseResp
+
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		bResp.RespCode = domprinter.RespCodeEnum_ParamInvalid
+		bResp.RespMessage = err.Error()
+		c.JSON(consts.StatusBadRequest, resp)
 		return
 	}
 
-	resp := new(domprinter.UpdatePrintTaskResp)
+	_, err = query.PrintTask.
+		WithContext(ctx).
+		Where(query.PrintTask.ID.In(req.PrintTaskIDList...)).
+		UpdateColumn(query.Q.PrintTask.State, req.TaskState.String())
+	if err != nil {
+		bResp.RespCode = domprinter.RespCodeEnum_DBErr
+		bResp.RespMessage = err.Error()
+		c.JSON(consts.StatusInternalServerError, resp)
+	}
 
+	bResp.RespCode = domprinter.RespCodeEnum_Success
+	bResp.RespMessage = "Update PrintTask Successfully"
 	c.JSON(consts.StatusOK, resp)
 }
