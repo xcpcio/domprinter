@@ -13,7 +13,7 @@ func main() {
 	g := gen.NewGenerator(gen.Config{
 		OutPath:      "./biz/model/query",
 		ModelPkgPath: "./biz/model/orm_gen",
-		Mode:         gen.WithoutContext | gen.WithDefaultQuery | gen.WithQueryInterface,
+		Mode:         gen.WithDefaultQuery | gen.WithQueryInterface,
 	})
 
 	mysql.Init()

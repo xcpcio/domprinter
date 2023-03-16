@@ -47,7 +47,7 @@ func newPrintTask(db *gorm.DB, opts ...gen.DOOption) printTask {
 }
 
 type printTask struct {
-	printTaskDo
+	printTaskDo printTaskDo
 
 	ALL        field.Asterisk
 	ID         field.Int64
@@ -97,6 +97,14 @@ func (p *printTask) updateTableName(table string) *printTask {
 
 	return p
 }
+
+func (p *printTask) WithContext(ctx context.Context) IPrintTaskDo {
+	return p.printTaskDo.WithContext(ctx)
+}
+
+func (p printTask) TableName() string { return p.printTaskDo.TableName() }
+
+func (p printTask) Alias() string { return p.printTaskDo.Alias() }
 
 func (p *printTask) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := p.fieldMap[fieldName]
