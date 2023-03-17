@@ -41,15 +41,16 @@ p["LOCATION"] = "${LOCATION}"
 p["Language"] = "${LANGUAGE}"
 p["FileName"] = "${ORIGINAL_FILE}"
 p["SourceCode"] = '''
-${COMMENT_CHAR}    FILE_NAME=${ORIGINAL_FILE}
-${COMMENT_CHAR}    LANGUAGE=${LANGUAGE}
-${COMMENT_CHAR}    TEAM_NAME=${TEAM_NAME}
-${COMMENT_CHAR}    LOCATION=${LOCATION}
+${COMMENT_CHAR}    SubmitTime=${SUBMIT_TIME}
+${COMMENT_CHAR}    FileName=${ORIGINAL_FILE}
+${COMMENT_CHAR}    Language=${LANGUAGE}
+${COMMENT_CHAR}    TeamName=${TEAM_NAME}
+${COMMENT_CHAR}    Location=${LOCATION}
 
 ${SOURCE_CODE}
 '''
 
-url = "http://${AUTH_STRING}${DOMPRINTER_HOSTNAME:-127.0.0.1}:${DOMPRINTER_PORT:-8888}/print-task"
+url = "http://${DOMPRINTER_HOSTNAME:-127.0.0.1}:${DOMPRINTER_PORT:-8888}/print-task"
 payload = json.dumps(body)
 headers = {'Content-Type': 'application/json'}
 
@@ -76,7 +77,7 @@ echo "${RES_MESSAGE}"
 echo "[FILE=${FILE}] [ORIGINAL_FILE=${ORIGINAL_FILE}] [LANGUAGE=${LANGUAGE}] [USER_NAME=${USER_NAME}] [TEAM_NAME=${TEAM_NAME}] [TEAM_ID=${TEAM_ID}] [LOCATION=${LOCATION}] [RES=${RES_MESSAGE}]" >>"${CUR_DIR}/handle_print_cmd.log"
 
 # test command
-# DOMPRINTER_HOSTNAME=devbox ./cmd/handle_print_cmd/exec.sh /tmp/abcdefg a.cpp cpp Dup4 Dup4 Dup4 test
+# AUTH_USERNAME=domprinter AUTH_PASSWORD=domprinter DOMPRINTER_HOSTNAME=devbox ./cmd/handle_print_cmd/exec.sh /tmp/abcdefg a.cpp cpp Dup4 Dup4 Dup4 test
 
 # configure print command
-# DOMPRINTER_HOSTNAME=domprinter /handle_print_cmd/exec.sh [file] [original] [language] [username] [teamname] [teamid] [location] 2>&1
+# AUTH_USERNAME=domprinter AUTH_PASSWORD=domprinter DOMPRINTER_HOSTNAME=domprinter /handle_print_cmd/exec.sh [file] [original] [language] [username] [teamname] [teamid] [location] 2>&1
