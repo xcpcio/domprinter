@@ -18,16 +18,16 @@ else
     SUBMIT_TIME="$(date -u --rfc-3339=ns | sed 's/ /T/; s/\(\....\).*\([+-]\)/\1\2/g')"
 fi
 
-AUTH_STRING=""
-
-if [[ -n "${AUTH_USERNAME}" ]] && [[ -n "${AUTH_PASSWORD}" ]]; then
-    AUTH_STRING="${AUTH_USERNAME}:${AUTH_PASSWORD}@"
+COMMENT_CHAR="//"
+if [[ "${LANGUAGE}" == "py" ]] || [[ "${LANGUAGE}" == "py2" ]] || [[ "${LANGUAGE}" == "py3" ]]; then
+    COMMENT_CHAR="#"
 fi
 
 RES_MESSAGE=$(
     python3 <<EOF
 import json
 import urllib.request
+import base64
 
 body = {}
 body["PrintTask"] = {}
@@ -41,10 +41,10 @@ p["LOCATION"] = "${LOCATION}"
 p["Language"] = "${LANGUAGE}"
 p["FileName"] = "${ORIGINAL_FILE}"
 p["SourceCode"] = '''
-//    FILE_NAME=${ORIGINAL_FILE}
-//    LANGUAGE=${LANGUAGE}
-//    TEAM_NAME=${TEAM_NAME}
-//    LOCATION=${LOCATION}
+${COMMENT_CHAR}    FILE_NAME=${ORIGINAL_FILE}
+${COMMENT_CHAR}    LANGUAGE=${LANGUAGE}
+${COMMENT_CHAR}    TEAM_NAME=${TEAM_NAME}
+${COMMENT_CHAR}    LOCATION=${LOCATION}
 
 ${SOURCE_CODE}
 '''
@@ -55,6 +55,10 @@ headers = {'Content-Type': 'application/json'}
 
 def main():
     req = urllib.request.Request(url, data=json.dumps(body).encode('utf-8'), headers=headers)
+
+    auth_base64_string = base64.b64encode("{}:{}".format("${AUTH_USERNAME}", "${AUTH_PASSWORD}").encode()).decode()
+    req.add_header("Authorization", "Basic {}".format(auth_base64_string))
+
     response = urllib.request.urlopen(req)
     code = response.status
     res = json.loads(response.read().decode('utf-8'))
