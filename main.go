@@ -6,8 +6,10 @@ import (
 	"bufio"
 	"bytes"
 	"context"
+	"os"
 
 	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/cloudwego/hertz/pkg/app/middlewares/server/basic_auth"
 	"github.com/cloudwego/hertz/pkg/app/server"
 	"github.com/cloudwego/hertz/pkg/common/bytebufferpool"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
@@ -44,6 +46,9 @@ func getAccessLogFormat() string {
 func main() {
 	dal.Init()
 
+	authUsername := os.Getenv("AUTH_USERNAME")
+	authPassword := os.Getenv("AUTH_PASSWORD")
+
 	accesslog.Tags["requestID"] = func(ctx context.Context, c *app.RequestContext, buf *bytebufferpool.ByteBuffer) (int, error) {
 		return buf.WriteString(requestid.Get(c))
 	}
@@ -53,14 +58,22 @@ func main() {
 	}
 
 	h := server.Default()
-	h.Use(
-		requestid.New(),
-		accesslog.New(
-			accesslog.WithAccessLogFunc(hlog.CtxInfof),
-			accesslog.WithTimeFormat(constants.ISO8601TimeFormat),
-			accesslog.WithFormat(getAccessLogFormat()),
-		),
-	)
+
+	h.
+		Use(requestid.New()).
+		Use(
+			accesslog.New(
+				accesslog.WithAccessLogFunc(hlog.CtxInfof),
+				accesslog.WithTimeFormat(constants.ISO8601TimeFormat),
+				accesslog.WithFormat(getAccessLogFormat()),
+			),
+		)
+
+	if len(authUsername) > 0 && len(authPassword) > 0 {
+		h.Use(basic_auth.BasicAuth(map[string]string{
+			authUsername: authPassword,
+		}))
+	}
 
 	register(h)
 
