@@ -18,6 +18,12 @@ else
     SUBMIT_TIME="$(date -u --rfc-3339=ns | sed 's/ /T/; s/\(\....\).*\([+-]\)/\1\2/g')"
 fi
 
+AUTH_STRING=""
+
+if [[ -n "${AUTH_USERNAME}" ]] && [[ -n "${AUTH_PASSWORD}" ]]; then
+    AUTH_STRING="${AUTH_USERNAME}:${AUTH_PASSWORD}@"
+fi
+
 RES_MESSAGE=$(
     python3 <<EOF
 import json
@@ -43,7 +49,7 @@ p["SourceCode"] = '''
 ${SOURCE_CODE}
 '''
 
-url = "http://${DOMPRINTER_HOSTNAME:-127.0.0.1}:${DOMPRINTER_PORT:-8888}/print-task"
+url = "http://${AUTH_STRING}${DOMPRINTER_HOSTNAME:-127.0.0.1}:${DOMPRINTER_PORT:-8888}/print-task"
 payload = json.dumps(body)
 headers = {'Content-Type': 'application/json'}
 
