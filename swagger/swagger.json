@@ -4,6 +4,11 @@
         "contact": {}
     },
     "paths": {
+        "/ping": {
+            "get": {
+                "responses": {}
+            }
+        },
         "/print-task": {
             "get": {
                 "responses": {}

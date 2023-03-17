@@ -16,7 +16,7 @@ gorm_gen:
 	go run ./cmd/gorm_gen/generate.go
 
 swagger_gen:
-	swag init
+	swag init --output=./swagger
 
 build:
 	bash ./build.sh
