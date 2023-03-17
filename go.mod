@@ -51,3 +51,5 @@ require (
 )
 
 replace github.com/apache/thrift => github.com/apache/thrift v0.13.0
+
+replace github.com/Dup4/domprinter/hertz_client => ./hertz_client
