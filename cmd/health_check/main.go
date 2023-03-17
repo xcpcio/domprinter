@@ -12,7 +12,16 @@ import (
 )
 
 func main() {
-	client, err := domprinter_service.NewDOMPrinterServiceClient("http://127.0.0.1:8888")
+	authUsername := os.Getenv("AUTH_USERNAME")
+	authPassword := os.Getenv("AUTH_PASSWORD")
+
+	authString := ""
+	if len(authUsername) > 0 && len(authPassword) > 0 {
+		authString = fmt.Sprintf("%s:%s@", authUsername, authPassword)
+
+	}
+
+	client, err := domprinter_service.NewDOMPrinterServiceClient(fmt.Sprintf("http://%s127.0.0.1:8888", authString))
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
