@@ -35,3 +35,8 @@ func _updateprinttaskMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _pingMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

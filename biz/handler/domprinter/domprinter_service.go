@@ -170,3 +170,20 @@ func UpdatePrintTask(ctx context.Context, c *app.RequestContext) {
 	bResp.RespMessage = "Update PrintTask Successfully"
 	c.JSON(consts.StatusOK, resp)
 }
+
+// Ping .
+// @router /ping [GET]
+func Ping(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req domprinter.PingReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp := new(domprinter.PingResp)
+	resp.Message = "pong"
+
+	c.JSON(consts.StatusOK, resp)
+}

@@ -75,8 +75,18 @@ struct UpdatePrintTaskResp {
     255: BaseResp BaseResp,
 }
 
+struct PingReq {
+
+}
+
+struct PingResp {
+    1: string Message,
+}
+
 service DOMPrinterService {
     FetchPrintTaskResp FetchPrintTask(1: FetchPrintTaskReq request) (api.get = "/print-task"),
     SubmitPrintTaskResp SubmitPrintTask(1: SubmitPrintTaskReq request) (api.post = "/print-task"),
     UpdatePrintTaskResp UpdatePrintTask(1: UpdatePrintTaskReq request) (api.patch = "/print-task"),
+
+    PingResp Ping(1: PingReq request) (api.get = "/ping"),
 }

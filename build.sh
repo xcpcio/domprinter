@@ -15,5 +15,6 @@ cp "${CUR_DIR}/script"/* "${OUTPUT_DIR}"/ 2>/dev/null
 chmod +x "${OUTPUT_DIR}/bootstrap.sh"
 
 go build -o "${OUTPUT_DIR}/bin/${BINARY_NAME}"
+go build -o "${OUTPUT_DIR}/bin/health_check" ./cmd/health_check
 
 cp -a "${CUR_DIR}/cmd/handle_print_cmd/exec.sh" "${OUTPUT_DIR}"/handle_print_cmd/exec.sh

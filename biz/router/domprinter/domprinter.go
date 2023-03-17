@@ -17,6 +17,7 @@ import (
 func Register(r *server.Hertz) {
 
 	root := r.Group("/", rootMw()...)
+	root.GET("/ping", append(_pingMw(), domprinter.Ping)...)
 	root.GET("/print-task", append(_fetchprinttaskMw(), domprinter.FetchPrintTask)...)
 	root.POST("/print-task", append(_submitprinttaskMw(), domprinter.SubmitPrintTask)...)
 	root.PATCH("/print-task", append(_updateprinttaskMw(), domprinter.UpdatePrintTask)...)

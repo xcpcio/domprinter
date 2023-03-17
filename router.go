@@ -3,14 +3,9 @@
 package main
 
 import (
-	handler "github.com/Dup4/domprinter/biz/handler"
-
 	"github.com/cloudwego/hertz/pkg/app/server"
 )
 
 // customizeRegister registers customize routers.
 func customizedRegister(r *server.Hertz) {
-	r.GET("/ping", handler.Ping)
-
-	// your code ...
 }
