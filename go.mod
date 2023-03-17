@@ -29,6 +29,8 @@ require (
 	github.com/go-openapi/swag v0.22.3 // indirect
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
+	github.com/google/uuid v1.3.0 // indirect
+	github.com/hertz-contrib/requestid v1.1.0 // indirect
 	github.com/hertz-contrib/swagger v0.0.0-20220711030440-b6402d4709f0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
