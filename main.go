@@ -4,6 +4,7 @@ package main
 
 import (
 	"github.com/cloudwego/hertz/pkg/app/server"
+	"github.com/hertz-contrib/requestid"
 	"github.com/hertz-contrib/swagger"
 	swaggerFiles "github.com/swaggo/files"
 
@@ -17,6 +18,7 @@ func main() {
 	dal.Init()
 
 	h := server.Default()
+	h.Use(requestid.New())
 
 	register(h)
 
