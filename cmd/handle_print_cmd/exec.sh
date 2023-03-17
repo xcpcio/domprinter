@@ -47,19 +47,16 @@ url = "http://${DOMPRINTER_HOSTNAME:-127.0.0.1}:${DOMPRINTER_PORT:-8888}/print-t
 payload = json.dumps(body)
 headers = {'Content-Type': 'application/json'}
 
-req = urllib.request.Request(url, data=json.dumps(body).encode('utf-8'), headers=headers)
-response = urllib.request.urlopen(req)
-code = response.status
-res = json.loads(response.read().decode('utf-8'))
-
 def main():
+    req = urllib.request.Request(url, data=json.dumps(body).encode('utf-8'), headers=headers)
+    response = urllib.request.urlopen(req)
+    code = response.status
+    res = json.loads(response.read().decode('utf-8'))
+
     if code == 200:
-        print("{}. [FILE_NAME={}] [LANGUAGE={}] [TEAM_NAME={}] [LOCATION={}]".format(res["BaseResp"]["RespMessage"], "${ORIGINAL_FILE}", "${LANGUAGE}", "${TEAM_NAME}", "${LOCATION}"))
-        return
+        print("{}. [PrintTaskID={}] [FILE_NAME={}] [LANGUAGE={}] [TEAM_NAME={}] [LOCATION={}]".format(res["BaseResp"]["RespMessage"], res["PrintTaskID"], "${ORIGINAL_FILE}", "${LANGUAGE}", "${TEAM_NAME}", "${LOCATION}"))
     else:
         print("Submit PrintTask Failed. Please try again or contact the administrator. [CODE={}]".format(code))
-
-    print(res)
 
 main()
 EOF
@@ -69,7 +66,7 @@ echo "${RES_MESSAGE}"
 echo "[FILE=${FILE}] [ORIGINAL_FILE=${ORIGINAL_FILE}] [LANGUAGE=${LANGUAGE}] [USER_NAME=${USER_NAME}] [TEAM_NAME=${TEAM_NAME}] [TEAM_ID=${TEAM_ID}] [LOCATION=${LOCATION}] [RES=${RES_MESSAGE}]" >>"${CUR_DIR}/handle_print_cmd.log"
 
 # test command
-# ./cmd/handle_print_cmd/exec.sh /tmp/abcdefg a.cpp cpp Dup4 Dup4 Dup4 test
+# DOMPRINTER_HOSTNAME=devbox ./cmd/handle_print_cmd/exec.sh /tmp/abcdefg a.cpp cpp Dup4 Dup4 Dup4 test
 
 # configure print command
 # DOMPRINTER_HOSTNAME=domprinter /handle_print_cmd/exec.sh [file] [original] [language] [username] [teamname] [teamid] [location] 2>&1
