@@ -63,11 +63,14 @@ def main():
     response = urllib.request.urlopen(req)
     code = response.status
     res = json.loads(response.read().decode('utf-8'))
+    request_id = response.info().get("X-Request-Id")
 
     if code == 200:
-        print("{}. [PrintTaskID={}] [FILE_NAME={}] [LANGUAGE={}] [TEAM_NAME={}] [LOCATION={}]".format(res["BaseResp"]["RespMessage"], res["PrintTaskID"], "${ORIGINAL_FILE}", "${LANGUAGE}", "${TEAM_NAME}", "${LOCATION}"))
+        message = res["BaseResp"]["RespMessage"]
+        print_task_id = res["PrintTaskID"]
+        print("{}. [PrintTaskID={}] [RequestID={}] [FILE_NAME={}] [LANGUAGE={}] [TEAM_NAME={}] [LOCATION={}]".format(message, print_task_id, request_id, "${ORIGINAL_FILE}", "${LANGUAGE}", "${TEAM_NAME}", "${LOCATION}"))
     else:
-        print("Submit PrintTask Failed. Please try again or contact the administrator. [CODE={}]".format(code))
+        print("Submit PrintTask Failed. Please try again or contact the administrator. [CODE={}] [RequestID={}]".format(code, request_id))
 
 main()
 EOF
