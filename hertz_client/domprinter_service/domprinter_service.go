@@ -22,6 +22,8 @@ type Client interface {
 	SubmitPrintTask(context context.Context, req *domprinter.SubmitPrintTaskReq, reqOpt ...config.RequestOption) (resp *domprinter.SubmitPrintTaskResp, rawResponse *protocol.Response, err error)
 
 	UpdatePrintTask(context context.Context, req *domprinter.UpdatePrintTaskReq, reqOpt ...config.RequestOption) (resp *domprinter.UpdatePrintTaskResp, rawResponse *protocol.Response, err error)
+
+	Ping(context context.Context, req *domprinter.PingReq, reqOpt ...config.RequestOption) (resp *domprinter.PingResp, rawResponse *protocol.Response, err error)
 }
 
 type DOMPrinterServiceClient struct {
@@ -110,6 +112,28 @@ func (s *DOMPrinterServiceClient) UpdatePrintTask(context context.Context, req *
 	return resp, rawResponse, nil
 }
 
+func (s *DOMPrinterServiceClient) Ping(context context.Context, req *domprinter.PingReq, reqOpt ...config.RequestOption) (resp *domprinter.PingResp, rawResponse *protocol.Response, err error) {
+	httpResp := &domprinter.PingResp{}
+	ret, err := s.client.r().
+		setContext(context).
+		setQueryParams(map[string]interface{}{}).
+		setPathParams(map[string]string{}).
+		setHeaders(map[string]string{}).
+		setFormParams(map[string]string{}).
+		setFormFileParams(map[string]string{}).
+		setBodyParam(req).
+		setRequestOption(reqOpt...).
+		setResult(httpResp).
+		execute("GET", "/ping")
+	if err != nil {
+		return nil, nil, err
+	}
+
+	resp = httpResp
+	rawResponse = ret.rawResponse
+	return resp, rawResponse, nil
+}
+
 var defaultClient, _ = NewDOMPrinterServiceClient("")
 
 func ConfigDefaultClient(ops ...Option) (err error) {
@@ -127,4 +151,8 @@ func SubmitPrintTask(context context.Context, req *domprinter.SubmitPrintTaskReq
 
 func UpdatePrintTask(context context.Context, req *domprinter.UpdatePrintTaskReq, reqOpt ...config.RequestOption) (resp *domprinter.UpdatePrintTaskResp, rawResponse *protocol.Response, err error) {
 	return defaultClient.UpdatePrintTask(context, req, reqOpt...)
+}
+
+func Ping(context context.Context, req *domprinter.PingReq, reqOpt ...config.RequestOption) (resp *domprinter.PingResp, rawResponse *protocol.Response, err error) {
+	return defaultClient.Ping(context, req, reqOpt...)
 }

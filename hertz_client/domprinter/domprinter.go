@@ -488,10 +488,45 @@ func (p *UpdatePrintTaskResp) String() string {
 	return fmt.Sprintf("UpdatePrintTaskResp(%+v)", *p)
 }
 
+type PingReq struct {
+}
+
+func NewPingReq() *PingReq {
+	return &PingReq{}
+}
+
+func (p *PingReq) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("PingReq(%+v)", *p)
+}
+
+type PingResp struct {
+	Message string `thrift:"Message,1" form:"Message" json:"Message" query:"Message"`
+}
+
+func NewPingResp() *PingResp {
+	return &PingResp{}
+}
+
+func (p *PingResp) GetMessage() (v string) {
+	return p.Message
+}
+
+func (p *PingResp) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("PingResp(%+v)", *p)
+}
+
 type DOMPrinterService interface {
 	FetchPrintTask(ctx context.Context, request *FetchPrintTaskReq) (r *FetchPrintTaskResp, err error)
 
 	SubmitPrintTask(ctx context.Context, request *SubmitPrintTaskReq) (r *SubmitPrintTaskResp, err error)
 
 	UpdatePrintTask(ctx context.Context, request *UpdatePrintTaskReq) (r *UpdatePrintTaskResp, err error)
+
+	Ping(ctx context.Context, request *PingReq) (r *PingResp, err error)
 }
