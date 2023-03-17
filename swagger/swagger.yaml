@@ -1,3 +1,4 @@
+basePath: /
 info:
   contact: {}
 paths:
@@ -11,4 +12,6 @@ paths:
       responses: {}
     post:
       responses: {}
+schemes:
+- http
 swagger: "2.0"
