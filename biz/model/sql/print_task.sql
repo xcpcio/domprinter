@@ -9,7 +9,7 @@ CREATE TABLE
         `language` VARCHAR(128) NOT NULL DEFAULT '' COMMENT 'Language',
         `file_name` VARCHAR(512) NOT NULL DEFAULT '' COMMENT 'File Name',
         `source_code` LONGBLOB NOT NULL DEFAULT '' COMMENT 'Source Code',
-        `submit_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Print task submit time',
+        `submit_time` TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Print task submit time',
         `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Print task create time',
         `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Print task update time',
         `deleted_at` timestamp NULL DEFAULT NULL COMMENT 'Print task delete time',
