@@ -1,8 +1,12 @@
 {
+    "schemes": [
+        "http"
+    ],
     "swagger": "2.0",
     "info": {
         "contact": {}
     },
+    "basePath": "/",
     "paths": {
         "/ping": {
             "get": {
