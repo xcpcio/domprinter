@@ -10,11 +10,10 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 
+	"github.com/Dup4/domprinter/biz/constants"
 	"github.com/Dup4/domprinter/biz/model/orm_gen"
 	"github.com/Dup4/domprinter/biz/model/query"
 )
-
-const iSO8601TimeFormat = "2006-01-02T15:04:05.999-07:00"
 
 // FetchPrintTask .
 // @router /print-task [GET]
@@ -62,7 +61,7 @@ func FetchPrintTask(ctx context.Context, c *app.RequestContext) {
 		state, _ := domprinter.TaskStateEnumFromString(task.State)
 
 		resp.PrintTaskList = append(resp.PrintTaskList, &domprinter.PrintTaskDTO{
-			SubmitTime:  task.SubmitTime.Format(iSO8601TimeFormat),
+			SubmitTime:  task.SubmitTime.Format(constants.ISO8601TimeFormat),
 			UserName:    task.UserName,
 			TeamName:    task.TeamName,
 			TeamID:      task.TeamID,
@@ -100,7 +99,7 @@ func SubmitPrintTask(ctx context.Context, c *app.RequestContext) {
 
 	p := req.PrintTask
 
-	submitTime, err := time.Parse(iSO8601TimeFormat, p.SubmitTime)
+	submitTime, err := time.Parse(constants.ISO8601TimeFormat, p.SubmitTime)
 	if err != nil {
 		bResp.RespCode = domprinter.RespCodeEnum_ParamInvalid
 		bResp.RespMessage = err.Error()
