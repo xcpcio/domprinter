@@ -6,6 +6,9 @@ require (
 	github.com/Dup4/domprinter/hertz_client v0.0.2
 	github.com/apache/thrift v0.18.1
 	github.com/cloudwego/hertz v0.6.0
+	github.com/hertz-contrib/requestid v1.1.0
+	github.com/hertz-contrib/swagger v0.0.0-20220711030440-b6402d4709f0
+	github.com/swaggo/files v1.0.0
 	github.com/swaggo/swag v1.8.10
 	gorm.io/driver/mysql v1.4.7
 	gorm.io/gen v0.3.21
@@ -30,15 +33,12 @@ require (
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/uuid v1.3.0 // indirect
-	github.com/hertz-contrib/requestid v1.1.0 // indirect
-	github.com/hertz-contrib/swagger v0.0.0-20220711030440-b6402d4709f0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.4 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/nyaruka/phonenumbers v1.1.6 // indirect
-	github.com/swaggo/files v1.0.0 // indirect
 	github.com/tidwall/gjson v1.14.4 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
