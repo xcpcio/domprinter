@@ -18,6 +18,12 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Add hertz_client tag
+        uses: tvdias/github-tagger@v0.0.2
+        with:
+          repo-token: "${{ github.token }}"
+          tag: "hertz_client/${{ github.ref_name }}"
+
       - name: Set node
         uses: actions/setup-node@v3
         with:
