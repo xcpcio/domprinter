@@ -135,15 +135,24 @@ func (p *TaskStateEnum) Value() (driver.Value, error) {
 }
 
 type BaseReq struct {
-	AuthToken string `thrift:"AuthToken,1,required" header:"X-DOM-TOKEN,required" json:"AuthToken,required"`
+	AuthToken *string `thrift:"AuthToken,1,optional" header:"X-DOM-TOKEN" json:"AuthToken,omitempty"`
 }
 
 func NewBaseReq() *BaseReq {
 	return &BaseReq{}
 }
 
+var BaseReq_AuthToken_DEFAULT string
+
 func (p *BaseReq) GetAuthToken() (v string) {
-	return p.AuthToken
+	if !p.IsSetAuthToken() {
+		return BaseReq_AuthToken_DEFAULT
+	}
+	return *p.AuthToken
+}
+
+func (p *BaseReq) IsSetAuthToken() bool {
+	return p.AuthToken != nil
 }
 
 func (p *BaseReq) String() string {

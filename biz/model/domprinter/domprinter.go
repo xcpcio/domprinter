@@ -136,26 +136,34 @@ func (p *TaskStateEnum) Value() (driver.Value, error) {
 }
 
 type BaseReq struct {
-	AuthToken string `thrift:"AuthToken,1,required" header:"X-DOM-TOKEN,required" json:"AuthToken,required"`
+	AuthToken *string `thrift:"AuthToken,1,optional" header:"X-DOM-TOKEN" json:"AuthToken,omitempty"`
 }
 
 func NewBaseReq() *BaseReq {
 	return &BaseReq{}
 }
 
+var BaseReq_AuthToken_DEFAULT string
+
 func (p *BaseReq) GetAuthToken() (v string) {
-	return p.AuthToken
+	if !p.IsSetAuthToken() {
+		return BaseReq_AuthToken_DEFAULT
+	}
+	return *p.AuthToken
 }
 
 var fieldIDToName_BaseReq = map[int16]string{
 	1: "AuthToken",
 }
 
+func (p *BaseReq) IsSetAuthToken() bool {
+	return p.AuthToken != nil
+}
+
 func (p *BaseReq) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
 	var fieldId int16
-	var issetAuthToken bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -176,7 +184,6 @@ func (p *BaseReq) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField1(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetAuthToken = true
 			} else {
 				if err = iprot.Skip(fieldTypeId); err != nil {
 					goto SkipFieldError
@@ -196,10 +203,6 @@ func (p *BaseReq) Read(iprot thrift.TProtocol) (err error) {
 		goto ReadStructEndError
 	}
 
-	if !issetAuthToken {
-		fieldId = 1
-		goto RequiredFieldNotSetError
-	}
 	return nil
 ReadStructBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
@@ -214,15 +217,13 @@ ReadFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
-RequiredFieldNotSetError:
-	return thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_BaseReq[fieldId]))
 }
 
 func (p *BaseReq) ReadField1(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
-		p.AuthToken = v
+		p.AuthToken = &v
 	}
 	return nil
 }
@@ -257,14 +258,16 @@ WriteStructEndError:
 }
 
 func (p *BaseReq) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("AuthToken", thrift.STRING, 1); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteString(p.AuthToken); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
+	if p.IsSetAuthToken() {
+		if err = oprot.WriteFieldBegin("AuthToken", thrift.STRING, 1); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteString(*p.AuthToken); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
 	}
 	return nil
 WriteFieldBeginError:

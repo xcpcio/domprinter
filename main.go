@@ -7,6 +7,7 @@ import (
 	"bytes"
 	"context"
 	"os"
+	"time"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/app/middlewares/server/basic_auth"
@@ -18,7 +19,6 @@ import (
 	"github.com/hertz-contrib/swagger"
 	swaggerFiles "github.com/swaggo/files"
 
-	"github.com/Dup4/domprinter/biz/constants"
 	"github.com/Dup4/domprinter/biz/dal"
 	_ "github.com/Dup4/domprinter/swagger"
 )
@@ -35,7 +35,7 @@ func main() {
 		Use(
 			accesslog.New(
 				accesslog.WithAccessLogFunc(hlog.CtxInfof),
-				accesslog.WithTimeFormat(constants.ISO8601TimeFormat),
+				accesslog.WithTimeFormat(time.RFC3339Nano),
 				accesslog.WithFormat(getAccessLogFormat()),
 			),
 		)

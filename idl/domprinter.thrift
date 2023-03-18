@@ -7,7 +7,7 @@ enum RespCodeEnum {
 }
 
 struct BaseReq {
-    1: required string AuthToken (api.header = "X-DOM-TOKEN"),
+    1: optional string AuthToken (api.header = "X-DOM-TOKEN"),
 }
 
 struct BaseResp {
