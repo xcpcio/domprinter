@@ -46,17 +46,6 @@ func getAccessLogFormat() string {
 func main() {
 	dal.Init()
 
-	authUsername := os.Getenv("AUTH_USERNAME")
-	authPassword := os.Getenv("AUTH_PASSWORD")
-
-	accesslog.Tags["requestID"] = func(ctx context.Context, c *app.RequestContext, buf *bytebufferpool.ByteBuffer) (int, error) {
-		return buf.WriteString(requestid.Get(c))
-	}
-
-	accesslog.Tags["clientIP"] = func(ctx context.Context, c *app.RequestContext, buf *bytebufferpool.ByteBuffer) (int, error) {
-		return buf.WriteString(c.ClientIP())
-	}
-
 	h := server.Default()
 
 	h.
@@ -69,15 +58,29 @@ func main() {
 			),
 		)
 
-	if len(authUsername) > 0 && len(authPassword) > 0 {
-		h.Use(basic_auth.BasicAuth(map[string]string{
-			authUsername: authPassword,
-		}))
-	}
-
+	initBasicAuth(h)
 	register(h)
 
 	h.GET("/swagger/*any", swagger.WrapHandler(swaggerFiles.Handler))
 
 	h.Spin()
+}
+
+func initBasicAuth(h *server.Hertz) {
+	authUsername := os.Getenv("AUTH_USERNAME")
+	authPassword := os.Getenv("AUTH_PASSWORD")
+
+	accesslog.Tags["requestID"] = func(ctx context.Context, c *app.RequestContext, buf *bytebufferpool.ByteBuffer) (int, error) {
+		return buf.WriteString(requestid.Get(c))
+	}
+
+	accesslog.Tags["clientIP"] = func(ctx context.Context, c *app.RequestContext, buf *bytebufferpool.ByteBuffer) (int, error) {
+		return buf.WriteString(c.ClientIP())
+	}
+
+	if len(authUsername) > 0 && len(authPassword) > 0 {
+		h.Use(basic_auth.BasicAuth(map[string]string{
+			authUsername: authPassword,
+		}))
+	}
 }
