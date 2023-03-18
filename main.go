@@ -23,24 +23,6 @@ import (
 	_ "github.com/Dup4/domprinter/swagger"
 )
 
-func getAccessLogFormat() string {
-	var buf bytes.Buffer
-	writer := bufio.NewWriter(&buf)
-
-	writer.WriteString("[${time}] [${requestID}] [${status}] [${latency}]")
-	writer.WriteString(" -")
-	writer.WriteString(" ${method} ${protocol}://${host}${path}")
-	writer.WriteString(" [clientIP=${clientIP}] [path=${path}] [route=${route}] [url=${url}]")
-	writer.WriteString(" [ip=${ip}] [ips=${ips}] [ua=${ua}]")
-	writer.WriteString(" [bytesSent=${bytesSent}] [bytesReceived=${bytesReceived}]")
-	writer.WriteString(" [queryParams=${queryParams}] [reqHeaders=${reqHeaders}] [resHeaders=${resHeaders}]")
-	writer.WriteString(" [reqBody=${body}] [resBody=${resBody}]")
-
-	writer.Flush()
-
-	return buf.String()
-}
-
 // @BasePath /
 // @schemes http
 func main() {
@@ -83,4 +65,22 @@ func initBasicAuth(h *server.Hertz) {
 			authUsername: authPassword,
 		}))
 	}
+}
+
+func getAccessLogFormat() string {
+	var buf bytes.Buffer
+	writer := bufio.NewWriter(&buf)
+
+	writer.WriteString("[${time}] [${requestID}] [${status}] [${latency}]")
+	writer.WriteString(" -")
+	writer.WriteString(" ${method} ${protocol}://${host}${path}")
+	writer.WriteString(" [clientIP=${clientIP}] [path=${path}] [route=${route}] [url=${url}]")
+	writer.WriteString(" [ip=${ip}] [ips=${ips}] [ua=${ua}]")
+	writer.WriteString(" [bytesSent=${bytesSent}] [bytesReceived=${bytesReceived}]")
+	writer.WriteString(" [queryParams=${queryParams}] [reqHeaders=${reqHeaders}] [resHeaders=${resHeaders}]")
+	writer.WriteString(" [reqBody=${body}] [resBody=${resBody}]")
+
+	writer.Flush()
+
+	return buf.String()
 }
