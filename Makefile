@@ -1,3 +1,5 @@
+PKGLIST=$(shell go list ./...)
+
 idl_gen:
 	hz update --idl ./idl/*.thrift --json_enumstr
 
@@ -27,3 +29,13 @@ test:
 dev:
 	bash ./build.sh
 	bash ./output/bootstrap.sh
+
+test:
+	go vet $(PKGLIST)
+	go test $(PKGLIST) -race -coverprofile=./unittest-coverage.out
+
+ut:
+	go test $(PKGLIST) -race -coverprofile=./unittest-coverage.out
+
+bench:
+	go test $(PKGLIST) -run=NOTEST -benchmem -bench=. -cpu=1,2,4,8
