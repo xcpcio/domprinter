@@ -23,9 +23,6 @@ swagger_gen:
 build:
 	bash ./build.sh
 
-test:
-	go test .
-
 dev:
 	bash ./build.sh
 	bash ./output/bootstrap.sh
