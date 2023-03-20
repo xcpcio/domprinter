@@ -56,10 +56,6 @@ func initBasicAuth(h *server.Hertz) {
 		return buf.WriteString(requestid.Get(c))
 	}
 
-	accesslog.Tags["clientIP"] = func(ctx context.Context, c *app.RequestContext, buf *bytebufferpool.ByteBuffer) (int, error) {
-		return buf.WriteString(c.ClientIP())
-	}
-
 	if len(authUsername) > 0 && len(authPassword) > 0 {
 		h.Use(basic_auth.BasicAuth(map[string]string{
 			authUsername: authPassword,

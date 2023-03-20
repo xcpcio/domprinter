@@ -6,7 +6,7 @@ require (
 	github.com/Dup4/domprinter/hertz_client v0.0.2
 	github.com/apache/thrift v0.18.1
 	github.com/cloudwego/hertz v0.6.0
-	github.com/hertz-contrib/logger/accesslog v0.0.0-20230206071608-2de215a9fd50
+	github.com/hertz-contrib/logger/accesslog v0.0.0-20230320032231-b153fe729ee7
 	github.com/hertz-contrib/requestid v1.1.0
 	github.com/hertz-contrib/swagger v0.0.0-20220711030440-b6402d4709f0
 	github.com/swaggo/files v1.0.0
