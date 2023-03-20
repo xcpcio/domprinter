@@ -1,6 +1,6 @@
 module github.com/Dup4/domprinter
 
-go 1.18
+go 1.20
 
 require (
 	github.com/Dup4/domprinter/hertz_client v0.0.2
