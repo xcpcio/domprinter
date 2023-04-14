@@ -68,6 +68,8 @@ github.com/henrylee2cn/ameda v1.4.10/go.mod h1:liZulR8DgHxdK+MEwvZIylGnmcjzQ6N6f
 github.com/henrylee2cn/goutil v0.0.0-20210127050712-89660552f6f8/go.mod h1:Nhe/DM3671a5udlv2AdV2ni/MZzgfv2qrPL5nIi3EGQ=
 github.com/hertz-contrib/logger/accesslog v0.0.0-20230206071608-2de215a9fd50 h1:EoF38wFnrRVPJQxMvJYxaaHzLcItO8jnZP4jQutmmfs=
 github.com/hertz-contrib/logger/accesslog v0.0.0-20230206071608-2de215a9fd50/go.mod h1:TabOF59o4RUIB8HhbbJV6E35hekMTtx+7Om3ruQe8n8=
+github.com/hertz-contrib/logger/accesslog v0.0.0-20230320032231-b153fe729ee7 h1:4PzHvhZMvdfQBF6Cil6DmMLdCVt17CLdj9YAqC25RV0=
+github.com/hertz-contrib/logger/accesslog v0.0.0-20230320032231-b153fe729ee7/go.mod h1:TabOF59o4RUIB8HhbbJV6E35hekMTtx+7Om3ruQe8n8=
 github.com/hertz-contrib/requestid v1.1.0 h1:+y1cuNlNX2KUoEC1SnBJ6M55/TlMTx3M9yxkqi0oTkk=
 github.com/hertz-contrib/requestid v1.1.0/go.mod h1:+l5CbZl//cSUoos421fnDFKQ6YYlVHcYc3Ri7AS8DUA=
 github.com/hertz-contrib/swagger v0.0.0-20220711030440-b6402d4709f0 h1:jO7AL/B4MssN2vEMEzeyYCVe1PIIa7soZ/NPVSghbz8=

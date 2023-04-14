@@ -6,8 +6,11 @@
     "files.insertFinalNewline": true,
     "files.trimFinalNewlines": true,
     "cSpell.words": [
+        "buildx",
         "cloudwego",
+        "codecov",
         "consts",
+        "DOCKERHUB",
         "domprinter",
         "gorm"
     ],
