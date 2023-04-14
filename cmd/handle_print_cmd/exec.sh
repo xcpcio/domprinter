@@ -41,11 +41,13 @@ p["LOCATION"] = "${LOCATION}"
 p["Language"] = "${LANGUAGE}"
 p["FileName"] = "${ORIGINAL_FILE}"
 p["SourceCode"] = '''
+${COMMENT_CHAR} ********************************
 ${COMMENT_CHAR}    SubmitTime=${SUBMIT_TIME}
 ${COMMENT_CHAR}    FileName=${ORIGINAL_FILE}
 ${COMMENT_CHAR}    Language=${LANGUAGE}
 ${COMMENT_CHAR}    TeamName=${TEAM_NAME}
 ${COMMENT_CHAR}    Location=${LOCATION}
+${COMMENT_CHAR} ********************************
 
 ${SOURCE_CODE}
 '''
