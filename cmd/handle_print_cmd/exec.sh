@@ -22,7 +22,7 @@ SOURCE_CODE="$(cat -n "${FILE}" | sed 's/\\n/\\\\n/g' | sed sed 's/\\r/\\\\r/g')
 if [[ "$(uname -a | grep -c "MacBookPro")" -ge 1 ]]; then
     SUBMIT_TIME="2023-03-16T11:30:49.799+08:00"
 else
-    SUBMIT_TIME="$(date -u --rfc-3339=ns | sed 's/ /T/; s/\(\....\).*\([+-]\)/\1\2/g')"
+    SUBMIT_TIME="$(date --rfc-3339=ns | sed 's/ /T/; s/\(\....\).*\([+-]\)/\1\2/g')"
 fi
 
 COMMENT_CHAR="//"
