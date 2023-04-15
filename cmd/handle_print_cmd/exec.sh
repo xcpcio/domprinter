@@ -40,14 +40,14 @@ body = {}
 body["PrintTask"] = {}
 p = body["PrintTask"]
 
-p["SubmitTime"] = "${SUBMIT_TIME}"
-p["UserName"] = "${USER_NAME}"
-p["TeamName"] = "${TEAM_NAME}"
-p["TeamID"] = "${TEAM_ID}"
-p["LOCATION"] = "${LOCATION}"
-p["Language"] = "${LANGUAGE}"
-p["FileName"] = "${ORIGINAL_FILE}"
-p["SourceCode"] = '''
+p["SubmitTime"] = r"${SUBMIT_TIME}"
+p["UserName"] = r"${USER_NAME}"
+p["TeamName"] = r"${TEAM_NAME}"
+p["TeamID"] = r"${TEAM_ID}"
+p["LOCATION"] = r"${LOCATION}"
+p["Language"] = r"${LANGUAGE}"
+p["FileName"] = r"${ORIGINAL_FILE}"
+p["SourceCode"] = r'''
 ${COMMENT_CHAR} ********************************
 ${COMMENT_CHAR}    SubmitTime=${SUBMIT_TIME}
 ${COMMENT_CHAR}    FileName=${ORIGINAL_FILE}
@@ -77,7 +77,7 @@ def main():
     if code == 200:
         message = res["BaseResp"]["RespMessage"]
         print_task_id = res["PrintTaskID"]
-        print("{}.\n[PrintTaskID={}]\n[RequestID={}]\n[FILE_NAME={}]\n[LANGUAGE={}]\n[TEAM_NAME={}]\n[LOCATION={}]".format(message, print_task_id, request_id, "${ORIGINAL_FILE}", "${LANGUAGE}", "${TEAM_NAME}", "${LOCATION}"))
+        print("{}.\n[PrintTaskID={}]\n[RequestID={}]\n[FILE_NAME={}]\n[LANGUAGE={}]\n[TEAM_NAME={}]\n[LOCATION={}]".format(message, print_task_id, request_id, r"${ORIGINAL_FILE}", r"${LANGUAGE}", r"${TEAM_NAME}", r"${LOCATION}"))
     else:
         print("Submit PrintTask Failed. Please try again or contact the administrator. [CODE={}] [RequestID={}]".format(code, request_id))
 
