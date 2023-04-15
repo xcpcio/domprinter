@@ -17,7 +17,7 @@ if [[ -n "${SUBMIT_FILE_LIMIT}" ]]; then
     fi
 fi
 
-SOURCE_CODE="$(cat -n "${FILE}")"
+SOURCE_CODE="$(cat -n "${FILE}" | sed 's/\\n/\\\\n/g')"
 
 if [[ "$(uname -a | grep -c "MacBookPro")" -ge 1 ]]; then
     SUBMIT_TIME="2023-03-16T11:30:49.799+08:00"
