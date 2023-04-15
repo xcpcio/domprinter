@@ -12,6 +12,13 @@ LOCATION="${7}"
 
 SOURCE_CODE="$(cat "${FILE}")"
 
+if [[ -n "${SUBMIT_FILE_LIMIT}" ]]; then
+    if [[ -s "${FILE}" && $(stat -c%s "${FILE}") -gt "${SUBMIT_FILE_LIMIT}" ]]; then
+        echo "File size exceeding the limit."
+        exit 0
+    fi
+fi
+
 if [[ "$(uname -a | grep -c "MacBookPro")" -ge 1 ]]; then
     SUBMIT_TIME="2023-03-16T11:30:49.799+08:00"
 else
@@ -70,7 +77,7 @@ def main():
     if code == 200:
         message = res["BaseResp"]["RespMessage"]
         print_task_id = res["PrintTaskID"]
-        print("{}. [PrintTaskID={}] [RequestID={}] [FILE_NAME={}] [LANGUAGE={}] [TEAM_NAME={}] [LOCATION={}]".format(message, print_task_id, request_id, "${ORIGINAL_FILE}", "${LANGUAGE}", "${TEAM_NAME}", "${LOCATION}"))
+        print("{}.\n[PrintTaskID={}]\n[RequestID={}]\n[FILE_NAME={}]\n[LANGUAGE={}]\n[TEAM_NAME={}]\n[LOCATION={}]".format(message, print_task_id, request_id, "${ORIGINAL_FILE}", "${LANGUAGE}", "${TEAM_NAME}", "${LOCATION}"))
     else:
         print("Submit PrintTask Failed. Please try again or contact the administrator. [CODE={}] [RequestID={}]".format(code, request_id))
 
