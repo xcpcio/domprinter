@@ -10,14 +10,14 @@ TEAM_NAME="${5}"
 TEAM_ID="${6}"
 LOCATION="${7}"
 
-SOURCE_CODE="$(cat "${FILE}")"
-
 if [[ -n "${SUBMIT_FILE_LIMIT}" ]]; then
     if [[ -s "${FILE}" && $(stat -c%s "${FILE}") -gt "${SUBMIT_FILE_LIMIT}" ]]; then
         echo "File size exceeding the limit."
         exit 0
     fi
 fi
+
+SOURCE_CODE="$(cat -n "${FILE}")"
 
 if [[ "$(uname -a | grep -c "MacBookPro")" -ge 1 ]]; then
     SUBMIT_TIME="2023-03-16T11:30:49.799+08:00"
