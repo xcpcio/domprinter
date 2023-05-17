@@ -12,19 +12,16 @@ on:
       - ".github/workflows/code.analysis.yml"
 
 env:
-  GO_VERSION: 1.19
+  GO_VERSION: "1.20"
 
 jobs:
   analysis:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up Go
-        uses: actions/setup-go@v3
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
         with:
-          go-version: ${{ env.GO_VERSION }}
-
-      - name: Check out code into the Go module directory
-        uses: actions/checkout@v3
+          go-version: ${{ env.GO_VERSION}}
 
       - name: Revive Action
         uses: morphy2k/revive-action@v2.2.0

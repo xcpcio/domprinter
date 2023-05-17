@@ -66,8 +66,6 @@ github.com/google/uuid v1.3.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+
 github.com/henrylee2cn/ameda v1.4.8/go.mod h1:liZulR8DgHxdK+MEwvZIylGnmcjzQ6N6f2PlWe7nEO4=
 github.com/henrylee2cn/ameda v1.4.10/go.mod h1:liZulR8DgHxdK+MEwvZIylGnmcjzQ6N6f2PlWe7nEO4=
 github.com/henrylee2cn/goutil v0.0.0-20210127050712-89660552f6f8/go.mod h1:Nhe/DM3671a5udlv2AdV2ni/MZzgfv2qrPL5nIi3EGQ=
-github.com/hertz-contrib/logger/accesslog v0.0.0-20230206071608-2de215a9fd50 h1:EoF38wFnrRVPJQxMvJYxaaHzLcItO8jnZP4jQutmmfs=
-github.com/hertz-contrib/logger/accesslog v0.0.0-20230206071608-2de215a9fd50/go.mod h1:TabOF59o4RUIB8HhbbJV6E35hekMTtx+7Om3ruQe8n8=
 github.com/hertz-contrib/logger/accesslog v0.0.0-20230320032231-b153fe729ee7 h1:4PzHvhZMvdfQBF6Cil6DmMLdCVt17CLdj9YAqC25RV0=
 github.com/hertz-contrib/logger/accesslog v0.0.0-20230320032231-b153fe729ee7/go.mod h1:TabOF59o4RUIB8HhbbJV6E35hekMTtx+7Om3ruQe8n8=
 github.com/hertz-contrib/requestid v1.1.0 h1:+y1cuNlNX2KUoEC1SnBJ6M55/TlMTx3M9yxkqi0oTkk=
