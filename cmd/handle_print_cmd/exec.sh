@@ -77,7 +77,7 @@ def main():
     if code == 200:
         message = res["BaseResp"]["RespMessage"]
         print_task_id = res["PrintTaskID"]
-        print("{}.\n[PrintTaskID={}]\n[RequestID={}]\n[FILE_NAME={}]\n[LANGUAGE={}]\n[TEAM_NAME={}]\n[LOCATION={}]".format(message, print_task_id, request_id, r"${ORIGINAL_FILE}", r"${LANGUAGE}", r"${TEAM_NAME}", r"${LOCATION}"))
+        print("{}.\n[PrintTaskID={}]\n[RequestID={}]\n[SubmitTime={}]\n[FILE_NAME={}]\n[LANGUAGE={}]\n[TEAM_NAME={}]\n[LOCATION={}]".format(message, print_task_id, request_id, r"${SUBMIT_TIME}", r"${ORIGINAL_FILE}", r"${LANGUAGE}", r"${TEAM_NAME}", r"${LOCATION}"))
     else:
         print("Submit PrintTask Failed. Please try again or contact the administrator. [CODE={}] [RequestID={}]".format(code, request_id))
 
