@@ -104,4 +104,4 @@ jobs:
           tags: |
             docker.io/${{ secrets.DOCKERHUB_USERNAME }}/domprinter:${{ env.DOCKER_TAG }}
             ghcr.io/${{ steps.github_repo_owner_string.outputs.lowercase }}/domprinter:${{ env.DOCKER_TAG }}
-            registry.cn-shanghai.aliyuncs.com/dup4/${{ env.DOCKER_TAG }}:${{ env.DOCKER_TAG }}
+            registry.cn-shanghai.aliyuncs.com/dup4/domprinter:${{ env.DOCKER_TAG }}
