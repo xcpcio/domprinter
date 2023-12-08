@@ -17,18 +17,13 @@ if [[ -n "${SUBMIT_FILE_LIMIT}" ]]; then
     fi
 fi
 
-SOURCE_CODE="$(cat -n "${FILE}")"
+SOURCE_CODE="$(cat "${FILE}")"
 # SOURCE_CODE="$(cat -n "${FILE}" | sed 's/\\n/\\\\n/g' | sed 's/\\r/\\\\r/g')"
 
 if [[ "$(uname -a | grep -c "MacBookPro")" -ge 1 ]]; then
     SUBMIT_TIME="2023-03-16T11:30:49.799+08:00"
 else
     SUBMIT_TIME="$(date --rfc-3339=ns | sed 's/ /T/; s/\(\....\).*\([+-]\)/\1\2/g')"
-fi
-
-COMMENT_CHAR="//"
-if [[ "${LANGUAGE}" == "py" ]] || [[ "${LANGUAGE}" == "py2" ]] || [[ "${LANGUAGE}" == "py3" ]]; then
-    COMMENT_CHAR="#"
 fi
 
 RES_MESSAGE=$(
@@ -48,17 +43,7 @@ p["TeamID"] = r"${TEAM_ID}"
 p["LOCATION"] = r"${LOCATION}"
 p["Language"] = r"${LANGUAGE}"
 p["FileName"] = r"${ORIGINAL_FILE}"
-p["SourceCode"] = r'''
-${COMMENT_CHAR} ********************************
-${COMMENT_CHAR}    SubmitTime=${SUBMIT_TIME}
-${COMMENT_CHAR}    FileName=${ORIGINAL_FILE}
-${COMMENT_CHAR}    Language=${LANGUAGE}
-${COMMENT_CHAR}    TeamName=${TEAM_NAME}
-${COMMENT_CHAR}    Location=${LOCATION}
-${COMMENT_CHAR} ********************************
-
-${SOURCE_CODE}
-'''
+p["SourceCode"] = r'''${SOURCE_CODE}'''
 
 url = "http://${DOMPRINTER_HOSTNAME:-127.0.0.1}:${DOMPRINTER_PORT:-8888}/print-task"
 payload = json.dumps(body)
