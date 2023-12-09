@@ -12,6 +12,7 @@
         "consts",
         "DOCKERHUB",
         "domprinter",
-        "gorm"
+        "gorm",
+        "typst"
     ],
 }
