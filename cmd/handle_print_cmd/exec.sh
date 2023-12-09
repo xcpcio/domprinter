@@ -12,7 +12,7 @@ LOCATION="${7}"
 
 if [[ -n "${SUBMIT_FILE_LIMIT}" ]]; then
     if [[ -s "${FILE}" && $(stat -c%s "${FILE}") -gt "${SUBMIT_FILE_LIMIT}" ]]; then
-        echo "File size exceeding the limit."
+        echo "File size exceeding the limit. [FILE_SIZE_LIMIT=${SUBMIT_FILE_LIMIT}]"
         exit 1
     fi
 fi
