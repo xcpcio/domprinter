@@ -15,11 +15,13 @@ BASE_URL = os.getenv(
 
 TYPST_CONFIG = """
 #let print(
+    task_id: "",
     team: "",
     location: "",
     filename: "",
     lang: "",
     filepath: "",
+    header: "",
     body
 ) = {
     set document(author: (team), title: filename)
@@ -27,13 +29,11 @@ TYPST_CONFIG = """
     set page(
         paper: "a4",
         header: [
-            座位: #location
-            #h(1fr)
             filename: #filename
             #h(1fr)
+            id: #task_id
+            #h(1fr)
             Page #counter(page).display("1 of 1", both: true)
-            \\
-            队伍: #team
         ],
         margin: (
             top: 48pt,
@@ -43,6 +43,7 @@ TYPST_CONFIG = """
         )
     )
 
+    header
     raw(read(filepath), lang: lang)
     body
 }
@@ -56,11 +57,13 @@ TYPST_CONFIG = """
 }
 
 #show: print.with(
+    task_id: "%s",
     team: "%s",
     location: "%s",
     filename: "%s",
     lang: "%s",
     filepath: "%s",
+    header: "%s",
 )
 """
 
@@ -124,9 +127,15 @@ def handle_print_task(task):
         with open(code_file_path, "w") as f:
             f.write(source_code)
 
+        header = """座位：{}
+队伍：{}
+提交时间：{}
+
+""".format(location, team_name, submit_time)
+
         with open(typst_path, "w") as f:
             f.write(TYPST_CONFIG %
-                    (team_name, location, filename, language, code_file_name))
+                    (print_task_id, team_name, location, filename, language, code_file_name, header))
 
         typst.compile(typst_path, output=pdf_path)
 
