@@ -3,6 +3,7 @@ import time
 import requests
 import json
 import typst
+import subprocess
 
 import constants
 
@@ -85,6 +86,10 @@ def handle_print_task(task):
                     (print_task_id, team_name, location, filename, language, code_file_name, header))
 
         typst.compile(typst_path, output=pdf_path)
+
+        cmd = "lp -o charset=UTF-8 -o print-quality=5 -P 1-10 {}".format(
+            pdf_path)
+        subprocess.run(cmd, shell=True)
 
         done(print_task_id)
     except Exception as e:
