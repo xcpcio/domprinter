@@ -3,8 +3,11 @@ import time
 import requests
 import json
 import typst
+import subprocess
 
-headers = {'content-type': 'application/json'}
+import constants
+
+HEADERS = {'content-type': 'application/json'}
 
 CUR_DIR = os.path.dirname(os.path.realpath(__file__))
 OUTPUT_PATH = os.path.join(CUR_DIR, "output")
@@ -13,64 +16,9 @@ BASE_URL = os.getenv(
     "BASE_URL", "http://username:password@localhost:8080/print-task")
 
 
-TYPST_CONFIG = """
-#let print(
-    task_id: "",
-    team: "",
-    location: "",
-    filename: "",
-    lang: "",
-    filepath: "",
-    header: "",
-    body
-) = {
-    set document(author: (team), title: filename)
-    set text(font: "ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace", lang: "zh")
-    set page(
-        paper: "a4",
-        header: [
-            filename: #filename
-            #h(1fr)
-            id: #task_id
-            #h(1fr)
-            Page #counter(page).display("1 of 1", both: true)
-        ],
-        margin: (
-            top: 48pt,
-            bottom: 28pt,
-            left: 24pt,
-            right: 32pt,
-        )
-    )
-
-    header
-    raw(read(filepath), lang: lang)
-    body
-}
-
-#show raw.line: it => {
-    box(stack(
-        dir: ltr,
-        box(width: 24pt)[#it.number],
-        it.body,
-    ))
-}
-
-#show: print.with(
-    task_id: "%s",
-    team: "%s",
-    location: "%s",
-    filename: "%s",
-    lang: "%s",
-    filepath: "%s",
-    header: "%s",
-)
-"""
-
-
 def fetch():
     local_url = BASE_URL + "?TaskState=1&LimitTaskNum=32"
-    resp = requests.get(local_url, headers=headers, verify=False, timeout=10)
+    resp = requests.get(local_url, headers=HEADERS, verify=False, timeout=10)
 
     if resp.status_code != 200:
         raise Exception(
@@ -134,10 +82,14 @@ def handle_print_task(task):
 """.format(location, team_name, submit_time)
 
         with open(typst_path, "w") as f:
-            f.write(TYPST_CONFIG %
+            f.write(constants.TYPST_CONFIG %
                     (print_task_id, team_name, location, filename, language, code_file_name, header))
 
         typst.compile(typst_path, output=pdf_path)
+
+        cmd = "lp -o charset=UTF-8 -o print-quality=5 -P 1-10 {}".format(
+            pdf_path)
+        subprocess.run(cmd, shell=True)
 
         done(print_task_id)
     except Exception as e:
@@ -157,9 +109,10 @@ def main():
             r = r["PrintTaskList"]
             for task in r:
                 handle_print_task(task)
-            time.sleep(1)
         except Exception as e:
             print(e)
+        finally:
+            time.sleep(1)
 
 
 if __name__ == "__main__":
