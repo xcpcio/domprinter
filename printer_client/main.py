@@ -51,6 +51,7 @@ def handle_print_task(task):
         team_id = task["TeamID"]
         location = task["Location"]
         language = task["Language"]
+        # language = "plaintext"
         filename = task["FileName"]
         source_code = task["SourceCode"]
         print_task_id = task["PrintTaskID"]
@@ -87,7 +88,7 @@ def handle_print_task(task):
 
         typst.compile(typst_path, output=pdf_path)
 
-        cmd = "lp -o charset=UTF-8 -o print-quality=5 -P 1-10 {}".format(
+        cmd = "lp -o charset=UTF-8 -o print-quality=5 -P 1-16 {}".format(
             pdf_path)
         subprocess.run(cmd, shell=True)
 
