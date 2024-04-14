@@ -1,4 +1,5 @@
 TYPST_CONFIG = """
+#set raw(theme: "bw.tmTheme")
 #let print(
     task_id: "",
     team: "",
