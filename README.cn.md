@@ -14,8 +14,9 @@
 
 ### Server
 
-* 首先需要在 Database 里面创建一张表：[建表语句 SQL](./biz/model/sql/print_task.sql)，DB 你可以复用 DOMjudge 的那个 Database，也可以自己再建一个新的 Database
-* 然后通过 Docker 启动 DOMPrinter 服务，可以参考以下脚本启动
+首先需要在 Database 里面创建一张表：[建表语句 SQL](./biz/model/sql/print_task.sql)，DB 你可以复用 DOMjudge 的那个 Database，也可以自己再建一个新的 Database
+
+然后通过 Docker 启动 DOMPrinter 服务，可以参考以下脚本启动容器：
 
 ```bash
 IMAGE="dup4/domprinter:0.0.26"
