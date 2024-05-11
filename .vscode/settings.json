@@ -13,6 +13,7 @@
         "DOCKERHUB",
         "domprinter",
         "gorm",
-        "typst"
+        "typst",
+        "XCPCIO"
     ],
 }
