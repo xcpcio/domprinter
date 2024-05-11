@@ -64,7 +64,7 @@ docker run \
 AUTH_USERNAME=domprinter AUTH_PASSWORD=domprinter DOMPRINTER_HOSTNAME=domprinter /on_print.sh [file] [original] [language] [username] [teamname] [teamid] [location] 2>&1
 ```
 
-不要将 DOMPrinter Server 相关信息通过这种方式传入脚本，不然选手能够通过 DOMjudge API 拿到这些信息，并且可能能够直接连入 DOMPrinter Server 拿到别的队伍的代码
+不要将 DOMPrinter Server 相关信息通过这种方式传入脚本，不然选手能够通过 DOMjudge API 拿到这些信息，并且可能能够直接连入 DOMPrinter Server 拿到别的队伍的打印代码
 
 ## Sponsors
 
