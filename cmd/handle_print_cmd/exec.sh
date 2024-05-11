@@ -2,6 +2,11 @@
 
 CUR_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 
+DOMPRINTER_HOSTNAME="" # your domprinter hostname
+DOMPRINTER_PORT=""     # your domprinter port
+AUTH_USERNAME=""       # your domprinter auth username
+AUTH_PASSWORD=""       # your domprinter auth password
+
 FILE="${1}"
 ORIGINAL_FILE="${2}"
 LANGUAGE="${3}"
@@ -75,7 +80,7 @@ echo "${RES_MESSAGE}"
 echo "[FILE=${FILE}] [ORIGINAL_FILE=${ORIGINAL_FILE}] [LANGUAGE=${LANGUAGE}] [USER_NAME=${USER_NAME}] [TEAM_NAME=${TEAM_NAME}] [TEAM_ID=${TEAM_ID}] [LOCATION=${LOCATION}] [RES=${RES_MESSAGE}]" >>"${CUR_DIR}/handle_print_cmd.log"
 
 # test command
-# AUTH_USERNAME=domprinter AUTH_PASSWORD=domprinter DOMPRINTER_HOSTNAME=devbox ./cmd/handle_print_cmd/exec.sh /tmp/abcdefg a.cpp cpp Dup4 Dup4 Dup4 test
+# ./cmd/handle_print_cmd/exec.sh /tmp/abcdefg a.cpp cpp Dup4 Dup4 Dup4 test
 
 # configure print command
-# AUTH_USERNAME=domprinter AUTH_PASSWORD=domprinter DOMPRINTER_HOSTNAME=domprinter /handle_print_cmd/exec.sh [file] [original] [language] [username] [teamname] [teamid] [location] 2>&1
+# /handle_print_cmd/exec.sh [file] [original] [language] [username] [teamname] [teamid] [location] 2>&1

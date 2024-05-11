@@ -11,8 +11,10 @@
         "codecov",
         "consts",
         "DOCKERHUB",
+        "domjudge",
         "domprinter",
         "gorm",
-        "typst"
+        "typst",
+        "XCPCIO"
     ],
 }
