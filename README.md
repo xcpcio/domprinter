@@ -10,6 +10,8 @@
 [![platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-blue.svg)](https://github.com/xcpcio/domprinter/releases)
 [![License][license-image-mit]][license-link-mit]
 
+* [中文版](./README.cn.md)
+
 ## Sponsors
 
 <p align="center">
