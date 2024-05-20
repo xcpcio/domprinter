@@ -44,8 +44,10 @@ docker run \
 ### Client
 
 然后需要在能够控制打印机的机器上，安装并启动 [printer_client](./printer_client/README.md)
+
 如果是在Windows环境下，请使用printer4win.py。并按照在文件开头找到以下内容进行配置。该Windows下的方案使用SumatraPDF作为pdf打印的方法，请先下载SumatraPDF的可执行文件。
 如果是在Linux环境下，可以直接参考[printer_client](./printer_client/README.md)中的方法使用main.py启动。
+
 ```python
 CONFIG = {
     "HEADERS": {'content-type': 'application/json'},
