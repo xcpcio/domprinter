@@ -1,3 +1,4 @@
 requests
 autopep8
 typst
+chardet
