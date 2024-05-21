@@ -16,7 +16,7 @@ CONFIG = {
 
 ### Windows
 ```bash
-git clone https://github.com/Dup4/domprinter.git
+git clone https://github.com/xcpcio/domprinter.git
 
 cd domprinter/printer_client
 
@@ -27,7 +27,7 @@ python printer4win.py
 
 ### Linux
 ```bash
-git clone https://github.com/Dup4/domprinter.git
+git clone https://github.com/xcpcio/domprinter.git
 
 cd domprinter/printer_client
 
