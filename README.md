@@ -45,18 +45,6 @@ docker run \
 
 然后需要在能够控制打印机的机器上，安装并启动 [printer_client](./printer_client/README.md)
 
-如果是在Windows环境下，请使用printer4win.py。并按照在文件开头找到以下内容进行配置。该Windows下的方案使用SumatraPDF作为pdf打印的方法，请先下载SumatraPDF的可执行文件。
-如果是在Linux环境下，可以直接参考[printer_client](./printer_client/README.md)中的方法使用main.py启动。
-
-```python
-CONFIG = {
-    "HEADERS": {'content-type': 'application/json'},
-    "BASE_URL": "",# 更改为你的打印服务器的实际路径，例如http://admin:admin@127.0.0.1:8080/print-task
-    "SUMATRA_PATH": "",  # 更改为SumatraPDF的实际路径，例如D:\SumatraPDF.exe
-    "PRINTER_NAME": "" # 更改为你想使用的打印机名称，例如HP LaserJet Professional
-}
-```
-
 ### Handle Script
 
 然后需要将 DOMjudge 和 DOMPrinter 串起来
