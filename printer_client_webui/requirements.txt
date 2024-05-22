@@ -1,0 +1,4 @@
+nicegui
+requests
+autopep8
+typst
