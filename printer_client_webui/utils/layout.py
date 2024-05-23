@@ -2,6 +2,8 @@ from nicegui import ui
 from pathlib import Path
 from typing import Awaitable, Callable, Optional
 from utils.cardset import api_settings_card
+from utils.cardset import print_monitoring_card
+# from utils.cardset import add_cpu_card
 
 def add_head_html() -> None:
     ui.add_head_html((Path(__file__).parent.parent / 'static' / 'header.html').read_text())
@@ -46,6 +48,9 @@ def add_main_content():
     widget_dict = dict()
     with ui.element('div').classes('flex column w-full flex-center q-px-none q-gutter-y-md'):
         widget_dict.update(api_settings_card())
+        widget_dict.update(print_monitoring_card())
+        # widget_dict.update(add_cpu_card())
         # TODO: Add cards here
+
     return widget_dict
 
