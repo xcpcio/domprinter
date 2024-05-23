@@ -41,7 +41,7 @@ docker run \
 
 ### Client
 
-然后需要在能够控制打印机的机器上，安装并启动 [printer_client](./printer_client/README.md)，需要注意的是该 client 目前只支持在 Linux 下运行
+然后需要在能够控制打印机的机器上，安装并启动 [printer_client](./printer_client/README.md)
 
 ### Handle Script
 
