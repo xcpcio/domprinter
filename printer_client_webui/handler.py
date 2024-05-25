@@ -58,8 +58,9 @@ class TaskProcessor(Process):
             team_name = task["TeamName"]
             team_id = task["TeamID"]
             location = task["Location"]
-            if location not in self.location_filter_list:
+            if location.split('-')[0] not in self.location_filter_list and self.location_filter_list[0] != "*":
                 logger.info("Location {} is not in the filter list, skip.".format(location))
+                return
             language = task["Language"]
             # language = "plaintext"
             filename = task["FileName"]
