@@ -13,14 +13,16 @@ task_queue = None
 
 
 task_done_list = list()
-
 widget_list = None
+handler_init_status = False
 
 def update_label():
+    global handler_init_status
     while not task_queue.empty():
         task = task_queue.get()
         if task[0] == 'INIT':
-            init_status()
+            handler_init_status = True
+            return
         elif task[0] == 'NEW':
             refresh_status(task[1]["PrintTaskID"], str(task[1]["TeamID"]) + str(task[1]["Location"] + str(task[1]["SubmitTime"])))
         elif task[0] == 'DONE':
@@ -33,6 +35,8 @@ def update_label():
             init_status()
     if widget_list is not None:
         widget_list["table"].update_rows(task_done_list)
+    if handler_init_status is True:
+        init_status()
 
 def init_status():
     global widget_list
