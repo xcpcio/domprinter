@@ -4,62 +4,79 @@ from nicegui import ui
 def add_rwd_div():
     div_box = ui.element('div').classes('flex row w-full flex-center q-px-none')
     return div_box
-
-def api_settings_card():
     
-    def handle_click():
-        localhost_value = localhost.value
-        port_value = port.value
-        username_value = username.value
-        password_value = password.value
-
-        if not localhost_value or not port_value or not username_value or not password_value:
-            ui.notify('Please fill in all fields.', color='negative', position='top')
-        else:
-            ui.notify('Data sent successfully!', color='positive', position='top')
-    
-    card = ui.card().classes('column q-px-md justify-center w-full')
+def current_task_card(cfg: dict):
     with add_rwd_div():
-        with card:
-            with ui.element('div').classes('w-full'):
+        with ui.card().classes('column q-px-md justify-center w-full'):
+             with ui.element('div').classes('w-full'):
                 with ui.element('div').classes('row items-center q-mx-none q-gutter-x-md q-my-md'):
-                    ui.icon('model_training').classes('text-h4')
-                    ui.label('API Settings').classes('text-h5 text-weight-bolder')
-            with ui.element('div').classes('row w-full items-center q-gutter-x-md q-px-md justify-center'):
-                localhost = ui.input(label='localhost').classes('row text-h6 q-px-md input-lg')
-                port = ui.input(label='port').classes('row text-h6 input-lg')
-                username = ui.input(label='username').classes('row text-h6 input-lg')
-                password = ui.input(label='password').classes('row text-h6 input-lg')
-                change_button = ui.button('Change', color='amber-10').classes('col-1 q-ml-lg')
-                change_button.on('click', handle_click)
-                
+                    st_icon = ui.icon('sym_r_error', color='negative').classes('col-1 text-h1')
+                    st_spin = ui.spinner('rings').classes('col-1 text-h1').props('color=orange-9')
+                    st_wait = ui.spinner('gears').classes('col-1 text-h3').props('color=orange-9')
+                    st_spin.set_visibility(False)
+                    st_wait.set_visibility(False)
+                    with ui.element('div').classes('col q-gutter-y-sm'):
+                        with ui.element('div').classes('column q-gutter-y-md'):
+                            st_label = ui.label('No status, check backend logs for more details.').classes('row text-h5 text-weight-bolder')
+                            with ui.element('div').classes('row'):
+                                with ui.element('div').classes('row q-gutter-x-sm'):
+                                    # with ui.element('div').classes('col'):
+                                    with ui.badge(color='negative').classes('row text-body1 text-weight-bolder') as st_bdg:
+                                        st_bdg_icon = ui.icon('info').classes('text-body1 q-mr-sm')
+                                        st_bdg_label = ui.label('Backend is not connected.').classes('text-body1')
+                                    with ui.badge(color='amber-9'):
+                                        ui.icon('sym_r_dns').classes('text-body1 q-mr-sm')
+                                        host_ip = ui.label(cfg['service_host']).classes('text-body1')    
+                                    # with ui.element('div').classes('col'):
+                                    with ui.badge(color='deep-purple-13'):
+                                        ui.icon('sym_r_login').classes('text-body1 q-mr-sm')
+                                        host_port = ui.label(cfg['service_port']).classes('text-body1')
+                                    # with ui.element('div').classes('col'):
+                                    with ui.badge(color='deep-orange-13'):
+                                        ui.icon('sym_r_account_circle').classes('text-body1 q-mr-sm')
+                                        host_auth = ui.label(cfg['auth_name']).classes('text-body1')
+                            with ui.element('q-item').classes('row w-full bg-grey-2 col').props('clickable v-ripple'):
+                                with ui.element('div').classes('flex col-auto items-center'):
+                                    print_icon = ui.icon('sym_r_print_disabled', color="red-6").classes('text-h4')
+                                with ui.element('div').classes('col q-gutter-y-sm'):
+                                    with ui.element('div').classes('flex row items-center w-full q-gutter-x-md q-px-md'):
+                                        ui.label('Task ID: ')
+                                        task_name = ui.badge('UNKNOWN', color='yellow-9')
+                                    with ui.element('div').classes('flex row items-center w-full q-gutter-x-md q-px-md'):
+                                        ui.label('Details: ')
+                                        task_details = ui.badge('UNCONNECTED', color='red-9')
+    
     return {
-        "print_localhost": localhost,
-        "print_host": port,
-        "print_username": username,
-        "print_password": password
+        "st_icon": st_icon,
+        "st_spin": st_spin,
+        "st_wait": st_wait,
+        "st_label": st_label,
+        "st_bdg": st_bdg,
+        "st_bdg_icon": st_bdg_icon,
+        "st_bdg_label": st_bdg_label,
+        "st_item_icon": print_icon,
+        "st_item_name": task_name,
+        "st_item_details": task_details
     }
-
+    
 def print_monitoring_card():
-    card = ui.card().classes('column q-px-md justify-center w-full')
     with add_rwd_div():
-        with card:
+        with ui.card().classes('column q-px-md justify-center w-full'):
             with ui.element('div').classes('w-full'):
                 with ui.element('div').classes('row items-center q-mx-none q-gutter-x-md q-my-md'):
-                    ui.icon('model_training').classes('text-h4')
-                    ui.label('Print Monitoring').classes('text-h5 text-weight-bolder')
-            with ui.element('div').classes('row w-full items-center q-gutter-x-md q-px-md'):
-                print_columns = [
-                            {'name': 'Print-ID', 'label': 'Print-ID', 'field': 'Print-ID', 'required': True, 'align': 'center'},
-                            {'name': 'Print-Team', 'label': 'Print-Team', 'field': 'Print-Team', 'align': 'center'},
-                            {'name': 'Print-Location', 'label': 'Print-Location', 'field': 'Print-Location', 'align': 'center'},
-                            {'name': 'Print-Time', 'label': 'Print-time', 'field': 'Print-Time', 'align': 'center'},
-                        ]
-                rows = [ ]
-                table = ui.table(columns=print_columns, rows=rows, row_key='name').classes('align-center mx-auto')
-                table.style('width: 100%; border-collapse: collapse;')
+                    ui.icon('sym_r_task').classes('text-h4')
+                    ui.label('Task history').classes('text-h5 text-weight-bolder')
+                with ui.element('div').classes('row w-full items-center'):
+                    print_columns = [
+                                {'name': 'Print-ID', 'label': 'Print-ID', 'field': 'Print-ID', 'required': True, 'align': 'center'},
+                                {'name': 'Print-Team', 'label': 'Print-Team', 'field': 'Print-Team', 'align': 'center'},
+                                {'name': 'Print-Location', 'label': 'Print-Location', 'field': 'Print-Location', 'align': 'center'},
+                                {'name': 'Print-Time', 'label': 'Print-Time', 'field': 'Print-Time', 'align': 'center'},
+                            ]
+                    rows = [ ]
+                    table = ui.table(columns=print_columns, rows=rows, row_key='name').classes('align-center mx-auto').style('width: 100%; border-collapse: collapse;').props('flat bordered')
 
     return {
-        "rows": rows
+        "table": table
     }
     

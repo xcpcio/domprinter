@@ -1,4 +1,5 @@
 nicegui
+colorlog
 requests
 autopep8
 typst

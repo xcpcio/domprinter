@@ -1,8 +1,8 @@
 from nicegui import ui
 from pathlib import Path
 from typing import Awaitable, Callable, Optional
-from utils.cardset import api_settings_card
 from utils.cardset import print_monitoring_card
+from utils.cardset import current_task_card
 # from utils.cardset import add_cpu_card
 
 def add_head_html() -> None:
@@ -23,7 +23,7 @@ def add_header(menu: Optional[ui.left_drawer] = None) -> None:
 
         with ui.element('div').classes('row gap-4 items-center no-wrap mr-auto'):
             with ui.element('div').classes('w-8 stroke-white stroke-2 max-[550px]:hidden'):
-                ui.icon('hub', color='white').classes('text-3xl')
+                ui.icon('print', color='white').classes('text-3xl')
             ui.label('Domprinter-Client').classes('text-2xl')
         
         with ui.row().classes('max-[1050px]:hidden'):
@@ -44,13 +44,12 @@ def add_basic_layout() -> None:
 
 
 
-def add_main_content():
-    widget_dict = dict()
+def add_main_content(cfg: dict) -> None:
+    widgets = {}
     with ui.element('div').classes('flex column w-full flex-center q-px-none q-gutter-y-md'):
-        widget_dict.update(api_settings_card())
-        widget_dict.update(print_monitoring_card())
-        # widget_dict.update(add_cpu_card())
-        # TODO: Add cards here
+        # widgets.update(api_settings_card())
+        widgets.update(current_task_card(cfg))
+        widgets.update(print_monitoring_card())
+    return widgets
 
-    return widget_dict
 

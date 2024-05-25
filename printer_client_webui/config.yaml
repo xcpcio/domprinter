@@ -1,3 +1,10 @@
 listen_host: "127.0.0.1"
 listen_port: 8080
-auto_reload: true
+service_host: "192.168.1.180"
+service_port: 1145
+auth_name: printer_client
+auth_passwd: caonima
+auto_reload: false
+filter_list:
+  - "X2407"
+  - "X3405"
