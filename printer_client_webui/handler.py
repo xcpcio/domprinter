@@ -29,6 +29,7 @@ class TaskProcessor(Process):
     def __init__(self, queue, config):
         super().__init__()
         self.queue = queue
+        self.refresh_interval = config.get("refresh_interval", 5)
         self.base_url = self.make_base_url(config)
         self.location_filter_list = config.get("filter_list", [])
         ensure_dir(OUTPUT_PATH)
@@ -128,5 +129,5 @@ class TaskProcessor(Process):
             except Exception as e:
                 logger.error("Error: {}".format(e))
             finally:
-                time.sleep(5)
+                time.sleep(self.refresh_interval)
     
