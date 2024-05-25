@@ -1,4 +1,5 @@
 # Custom
+*.yaml
 e_*
 .vscode
 ckpt

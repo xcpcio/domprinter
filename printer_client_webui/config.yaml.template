@@ -1,0 +1,9 @@
+listen_host: 127.0.0.1
+listen_port: 8080
+service_host: host_ip
+service_port: host_port
+auth_name: auth_name
+auth_passwd: auth_passwd
+auto_reload: false
+filter_list:
+  - "filter1"
